@@ -5,9 +5,13 @@
 <ul>
 	<li><a href="/">Etusivu</a></li>
 	<li><a href="/courses">Kurssit</a></li>
-	<li><a href="/login">Kirjaudu</a></li>
-	<li><a href="/register">Rekisteröidy</a></li>
 </ul>
+<hr>
+{% if session.session_name %}
+<p>Olet kirjautunut nimellä <b>{{ session.session_name }}</b>. <a href="/logout">Kirjaudu ulos</a></p>
+{% else %}
+<p>Et ole kirjautunut. <a href="/register">Luo tunnus</a> tai <a href="/login">kirjaudu sisään</a>.</p>
+{% endif %}
 <hr>
 {% block content %}{% endblock %}
 <hr>

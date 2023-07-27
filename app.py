@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template
+from flask import render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from os import getenv
@@ -13,10 +13,28 @@ db = SQLAlchemy(app)
 def index():
     return render_template("index.html")
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    if request.method == "GET":
+        return render_template("login.html")
+    if request.method == "POST":
+        username = request.form["name"]
+        password = request.form["password"]
+        sql = text("SELECT * FROM users WHERE name=:username AND password=:password")
+        result = db.session.execute(sql, {"username":username, "password":password})
+        user = result.fetchone()
+        if not user:
+            return render_template("error.html", message="Väärä nimi tai salasana.")
+        session["session_name"] = username
+        return redirect("/")
+        # TODO: better password security
     
+@app.route("/logout")
+def logout():
+    # TODO: fix Internal Server Error when wasn't logged in
+    del session["session_name"]
+    return redirect("/")
+
 @app.route("/register")
 def register():
     return render_template("register.html")
