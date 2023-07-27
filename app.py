@@ -30,3 +30,12 @@ def courses():
     if not course_list:
         message = "<p>Kursseja ei vielä ole.</p>"
     return render_template("courses.html", message=message, course_list=course_list)
+    
+@app.route("/course/<int:course_id>")
+def course(course_id):
+    sql = text("SELECT * FROM courses WHERE id=:course_id")
+    result = db.session.execute(sql, {"course_id":course_id})
+    course_info = result.fetchone()
+    if not course_info:
+        return render_template("error.html", message="Kurssia ei löydy.")
+    return render_template("course.html", course_info=course_info)

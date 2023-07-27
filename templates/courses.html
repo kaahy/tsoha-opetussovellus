@@ -5,7 +5,7 @@
 {{ message }}
 <ul>
 {% for course in course_list %}
-<li>{{ course.name }}</li>
+<li><a href="/course/{{ course.id }}">{{ course.name }}</a></li>
 {% endfor %}
 </ul>
 {% endblock %}
