@@ -2,5 +2,10 @@
 {% block title %}Kurssit{% endblock %}
 {% block content %}
 <h2>Kurssit</h2>
-<p>Tulossa.</p>
+{{ message }}
+<ul>
+{% for course in course_list %}
+<li>{{ course.name }}</li>
+{% endfor %}
+</ul>
 {% endblock %}
