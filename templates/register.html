@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}Luo tunnus{% endblock %}
+{% block content %}
+<h2>Luo tunnus</h2>
+<form>
+Nimi:<br>
+<input type="text" name="name"><br><br>
+Salasana:<br>
+<input type="password" name="password1"><br><br>
+Salasana uudelleen:<br>
+<input type="password" name="password2"><br><br>
+Rooli:
+<select name="role">
+    <option value="student">opiskelija</option>
+    <option value="teacher">opettaja</option>
+</select><br><br>
+<input type="submit" value="Jatka">
+</form>
+<p>Lomake ei toimi vielä.</p>
+{% endblock %}
