@@ -35,9 +35,26 @@ def logout():
     del session["session_name"]
     return redirect("/")
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html")
+    if request.method == "POST":
+        name = request.form["name"]
+        password  = request.form["password1"]
+        password2 = request.form["password2"]
+        is_teacher = "f"
+        if request.form["role"] == "teacher":
+            is_teacher = "t"
+    if password != password2:
+        return render_template("error.html", message="Salasanat eivät täsmää.")
+    try:
+        sql = text("INSERT INTO users (name, password, is_teacher) VALUES (:name, :password, :is_teacher)")
+        db.session.execute(sql, {"name":name, "password":password, "is_teacher":is_teacher})
+        db.session.commit()
+    except:
+        return render_template("error.html", message="Tunnuksen luominen ei onnistunut.")
+    return render_template("message.html", title="Tervetuloa", message="Tunnuksesi on luotu, " + name + ". Voit nyt kirjautua sisään.")
     
 @app.route("/courses")
 def courses():
