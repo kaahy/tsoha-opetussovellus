@@ -26,6 +26,8 @@ def login():
         if not user:
             return render_template("error.html", message="Väärä nimi tai salasana.")
         session["session_name"] = username
+        session["user_id"] = user.id
+        session["is_teacher"] = user.is_teacher
         return redirect("/")
         # TODO: better password security
     
@@ -33,6 +35,8 @@ def login():
 def logout():
     # TODO: fix Internal Server Error when wasn't logged in
     del session["session_name"]
+    del session["user_id"]
+    del session["is_teacher"]
     return redirect("/")
 
 @app.route("/register", methods=["GET", "POST"])
@@ -74,3 +78,22 @@ def course(course_id):
     if not course_info:
         return render_template("error.html", message="Kurssia ei löydy.")
     return render_template("course.html", course_info=course_info)
+
+@app.route("/add_course", methods=["GET", "POST"])
+def add_course():
+    is_teacher = False
+    if session.get("is_teacher"):
+        if session["is_teacher"] == True:
+            is_teacher = True
+    if not is_teacher:
+        return render_template("error.html", message="Et voi luoda kurssia, koska et ole kirjautunut opettajan tunnuksella.")
+    if request.method == "GET":
+        return render_template("add_course.html")
+    if request.method == "POST":
+        name = request.form["course_name"]
+        user_id = session["user_id"]
+        sql = text("INSERT INTO courses (name, user_id) VALUES (:name, :user_id) RETURNING id")
+        result = db.session.execute(sql, {"name":name, "user_id":user_id})
+        course_id = result.fetchone()[0]
+        db.session.commit()
+        return redirect("/course/" + str(course_id))

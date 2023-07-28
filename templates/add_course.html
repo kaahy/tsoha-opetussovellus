@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}Luo kurssi{% endblock %}
+{% block content %}
+<h2>Luo kurssi</h2>
+<form method="POST">
+Kurssin nimi:<br>
+<input type="text" name="course_name"><br><br>
+<input type="submit" value="Jatka">
+</form>
+<p>Toiminto on kesken. Voit tällä hetkellä luoda kurssille vain nimen.</p>
+{% endblock %}
