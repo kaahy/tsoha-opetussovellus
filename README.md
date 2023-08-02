@@ -1,13 +1,34 @@
 # Opetussovellus
 
-Sovelluksella toteutetaan verkkokursseja ja niihin liittyviä automaattisesti tarkastettavia monivalintatehtäviä. Käyttäjä voi luoda tunnuksen, kirjautua sisään ja ulos sekä nähdä olemassa olevat kurssit. Käyttäjä on joko opettaja tai oppilas. 
+Sovelluksella toteutetaan verkkokursseja ja niihin liittyviä automaattisesti tarkastettavia monivalintatehtäviä. Käyttäjä on joko opettaja tai oppilas. 
+
+Kaikki käyttäjät voivat
+- [x] luoda tunnuksen sekä kirjautua sisään ja ulos
+- [x] nähdä olemassa olevat kurssit
 
 Opettaja voi
-- luoda ja poistaa kurssin
-- muokata kurssin materiaalia ja tehtäviä
-- nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät.
+- [x] luoda kurssin
+- [ ] poistaa kurssin
+- [ ] muokata kurssin materiaalia ja tehtäviä
+- [ ] nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät
 
 Opiskelija voi
-- ilmoittautua kurssille ja poistua kurssilta
-- lukea kurssin materiaalia
-- tehdä tehtäviä ja nähdä mitkä tehtävät on ratkaissut.
+- [ ] ilmoittautua kurssille ja poistua kurssilta
+- [ ] lukea kurssin materiaalia
+- [ ] tehdä tehtäviä ja nähdä mitkä tehtävät on ratkaissut
+
+## Huom.
+
+Sovellusta pystyy ainakin toistaiseksi käyttämään **vain paikallisesti.** Ohjeet tähän ovat alla.
+
+## Käynnistysohjeet
+
+- **Kloonaa** tämä repositorio koneellesi
+- Siirry repositorion **juurikansioon**
+- Luo **.env**-tiedosto
+- Lisää .env-tiedostoon rivit **DATABASE_URL=[tietokannan paikallinen osoite]** ja **SECRET_KEY=[salainen avain]**
+- Luo **virtuaaliympäristö** komennolla `python3 -m venv venv`
+- Aktivoi virtuaaliympäristö: `source venv/bin/activate`
+- Lataa sovelluksen **riippuvuudet:** `pip install -r ./requirements.txt`
+- Määritä **tietokannan** skeema: `psql < schema.sql`
+- **Käynnistä** sovellus: `flask run`
