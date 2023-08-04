@@ -77,7 +77,7 @@ def course(course_id):
     course_info = result.fetchone()
     if not course_info:
         return render_template("error.html", message="Kurssia ei löydy.")
-    pages = db.session.execute(text("SELECT id, title FROM course_pages WHERE course_id=:course_id"), {"course_id":course_id}).fetchall()
+    pages = db.session.execute(text("SELECT id, title FROM course_pages WHERE course_id=:course_id ORDER BY id"), {"course_id":course_id}).fetchall()
     course_name = course_info.name
     teacher_id = course_info.user_id
     teacher_name = db.session.execute(text("SELECT name FROM users WHERE id=:id"), {"id":teacher_id}).fetchone()[0]
@@ -109,7 +109,7 @@ def course_page(course_page_id):
     if not course_page:
         return render_template("error.html", message="Sivua ei löydy.")
     course_name = db.session.execute(text("SELECT name FROM courses WHERE id=:id"), {"id":course_page.course_id}).fetchone().name
-    return render_template("course_page.html", course_id=course_page.course_id, course_name=course_name, course_page_name=course_page.title, course_page_content=course_page.content)
+    return render_template("course_page.html", course_id=course_page.course_id, course_name=course_name, course_page_name=course_page.title, course_page_content=course_page.content, course_page_id=course_page_id)
 
 @app.route("/course/<int:course_id>/add_page", methods=["GET", "POST"])
 def add_course_page(course_id):
@@ -132,3 +132,29 @@ def add_course_page(course_id):
             return redirect(f"/course/{course_id}")
         except:
             return render_template("error.html", message="Sivun lisääminen ei onnistunut.")
+        
+@app.route("/course_page/<int:course_page_id>/edit", methods=["GET", "POST"])
+def edit_course_page(course_page_id):
+    course_id = db.session.execute(text("SELECT course_id FROM course_pages WHERE id=:id"), {"id":course_page_id}).fetchone()[0]
+    course_creator_id = db.session.execute(text("SELECT user_id FROM courses WHERE id=:id"), {"id":course_id}).fetchone()[0]
+    allow = False
+    if session.get("user_id"):
+        if session["user_id"] == course_creator_id:
+            allow = True
+    if not allow:
+        return render_template("error.html", message="Et voi muokata tämän kurssin sivuja, koska et ole kirjautunut sen opettajana.")
+    if request.method == "GET":
+        course_page = db.session.execute(text("SELECT course_id, title, content FROM course_pages WHERE id=:id"), {"id":course_page_id}).fetchone()
+        course_name = db.session.execute(text("SELECT name FROM courses WHERE id=:id"), {"id":course_page.course_id}).fetchone()[0]
+        return render_template("edit_course_page.html", course_id=course_page.course_id, course_name=course_name, course_page_id=course_page_id, course_page_title=course_page.title, course_page_content=course_page.content)
+    if request.method == "POST":
+        try:
+            title = request.form["title"]
+            content = request.form["content"]
+            db.session.execute(text("UPDATE course_pages SET title=:title, content=:content WHERE id=:id"), {"title":title, "content":content, "id":course_page_id})
+            db.session.commit()
+            return redirect(f"/course_page/{course_page_id}")
+        except:
+            return render_template("error.html", message="Sivun muokkaaminen ei onnistunut.")
+
+# TODO: fix too much repeating code

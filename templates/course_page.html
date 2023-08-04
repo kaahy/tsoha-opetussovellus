@@ -4,22 +4,5 @@
 <p><a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > {{ course_page_name }}</p>
 <h2>{{ course_page_name }}</h2>
 {{ course_page_content }}
-<hr>
-<h2>Tehtävät</h2>
-<p>Tulossa. Alla olevat esimerkkilomakkeet eivät toimi.</p>
-<p>
-    <b>Kysymys?</b><br>
-    <input type="checkbox"> Vaihtoehto<br>
-    <input type="checkbox"> Vaihtoehto<br>
-    <input type="checkbox"> Vaihtoehto<br>
-    <input type="checkbox"> Vaihtoehto<br>
-</p>
-<p>
-    <b>Kysymys?</b><br>
-    <input type="checkbox"> Vaihtoehto<br>
-    <input type="checkbox"> Vaihtoehto<br>
-    <input type="checkbox"> Vaihtoehto<br>
-    <input type="checkbox"> Vaihtoehto<br>
-</p>
-<input type="submit">
+<p><a href="/course_page/{{ course_page_id }}/edit">Muokkaa sivua</a> (vain opettaja)</p>
 {% endblock %}
