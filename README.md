@@ -30,6 +30,6 @@ Sovellusta pystyy ainakin toistaiseksi käyttämään **vain paikallisesti.** Oh
 - Lisää .env-tiedostoon rivit **DATABASE_URL=[tietokannan paikallinen osoite]** ja **SECRET_KEY=[salainen avain]**
 - Luo **virtuaaliympäristö** komennolla `python3 -m venv venv`
 - Aktivoi virtuaaliympäristö: `source venv/bin/activate`
-- Lataa sovelluksen **riippuvuudet:** `pip install -r ./requirements.txt`
+- Lataa sovelluksen **riippuvuudet:** `pip install -r requirements.txt`
 - Määritä **tietokannan** skeema: `psql < schema.sql`
 - **Käynnistä** sovellus: `flask run`
