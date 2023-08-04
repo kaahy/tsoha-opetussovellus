@@ -81,7 +81,8 @@ def course(course_id):
     course_name = course_info.name
     teacher_id = course_info.user_id
     teacher_name = db.session.execute(text("SELECT name FROM users WHERE id=:id"), {"id":teacher_id}).fetchone()[0]
-    return render_template("course.html", pages=pages, course_name=course_name, course_info=course_info, teacher_name=teacher_name)
+    course_id = course_info.id
+    return render_template("course.html", pages=pages, course_name=course_name, course_id=course_id, teacher_name=teacher_name)
 
 @app.route("/add_course", methods=["GET", "POST"])
 def add_course():
@@ -109,3 +110,25 @@ def course_page(course_page_id):
         return render_template("error.html", message="Sivua ei löydy.")
     course_name = db.session.execute(text("SELECT name FROM courses WHERE id=:id"), {"id":course_page.course_id}).fetchone().name
     return render_template("course_page.html", course_id=course_page.course_id, course_name=course_name, course_page_name=course_page.title, course_page_content=course_page.content)
+
+@app.route("/course/<int:course_id>/add_page", methods=["GET", "POST"])
+def add_course_page(course_id):
+    course_creator_id = db.session.execute(text("SELECT user_id FROM courses WHERE id=:id"), {"id":course_id}).fetchone()[0]
+    allow = False
+    if session.get("user_id"):
+        if session["user_id"] == course_creator_id:
+            allow = True
+    if not allow:
+        return render_template("error.html", message="Et voi lisätä sivua tälle kurssille, koska et ole kirjautunut sen opettajana.")
+    if request.method == "GET":
+        course_name = db.session.execute(text("SELECT name FROM courses WHERE id=:id"), {"id":course_id}).fetchone()[0]
+        return render_template("add_course_page.html", course_name=course_name, course_id=course_id)
+    if request.method == "POST":
+        try:
+            title = request.form["title"]
+            content = request.form["content"]
+            db.session.execute(text("INSERT INTO course_pages (course_id, title, content) VALUES (:course_id, :title, :content)"), {"course_id":course_id, "title":title, "content":content})
+            db.session.commit()
+            return redirect(f"/course/{course_id}")
+        except:
+            return render_template("error.html", message="Sivun lisääminen ei onnistunut.")
