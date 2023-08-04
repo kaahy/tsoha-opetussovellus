@@ -14,6 +14,7 @@ CREATE TABLE courses (
 CREATE TABLE course_pages (
 	id SERIAL PRIMARY KEY,
 	course_id INTEGER REFERENCES courses,
+	title TEXT,
 	content TEXT
 );
 
