@@ -65,10 +65,7 @@ def courses():
     sql = text("SELECT * FROM courses")
     result = db.session.execute(sql)
     course_list = result.fetchall()
-    message = ""
-    if not course_list:
-        message = "<p>Kursseja ei vielä ole.</p>"
-    return render_template("courses.html", message=message, course_list=course_list)
+    return render_template("courses.html", course_list=course_list)
     
 @app.route("/course/<int:course_id>")
 def course(course_id):

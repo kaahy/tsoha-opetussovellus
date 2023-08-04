@@ -2,7 +2,9 @@
 {% block title %}Kurssit{% endblock %}
 {% block content %}
 <h2>Kurssit</h2>
-{{ message }}
+{% if not course_list %}
+<p>Kursseja ei vielä ole.</p>
+{% endif %}
 <ul>
 {% for course in course_list %}
 <li><a href="/course/{{ course.id }}">{{ course.name }}</a></li>
