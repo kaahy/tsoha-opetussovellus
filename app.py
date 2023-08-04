@@ -72,12 +72,16 @@ def courses():
     
 @app.route("/course/<int:course_id>")
 def course(course_id):
-    sql = text("SELECT * FROM courses WHERE id=:course_id")
+    sql = text("SELECT id, name, user_id FROM courses WHERE id=:course_id")
     result = db.session.execute(sql, {"course_id":course_id})
     course_info = result.fetchone()
     if not course_info:
         return render_template("error.html", message="Kurssia ei löydy.")
-    return render_template("course.html", course_info=course_info)
+    pages = db.session.execute(text("SELECT id, title FROM course_pages WHERE course_id=:course_id"), {"course_id":course_id}).fetchall()
+    course_name = course_info.name
+    teacher_id = course_info.user_id
+    teacher_name = db.session.execute(text("SELECT name FROM users WHERE id=:id"), {"id":teacher_id}).fetchone()[0]
+    return render_template("course.html", pages=pages, course_name=course_name, course_info=course_info, teacher_name=teacher_name)
 
 @app.route("/add_course", methods=["GET", "POST"])
 def add_course():
@@ -97,3 +101,11 @@ def add_course():
         course_id = result.fetchone()[0]
         db.session.commit()
         return redirect("/course/" + str(course_id))
+
+@app.route("/course_page/<int:course_page_id>")
+def course_page(course_page_id):
+    course_page = db.session.execute(text("SELECT id, course_id, title, content FROM course_pages WHERE id=:id"), {"id":course_page_id}).fetchone()
+    if not course_page:
+        return render_template("error.html", message="Sivua ei löydy.")
+    course_name = db.session.execute(text("SELECT name FROM courses WHERE id=:id"), {"id":course_page.course_id}).fetchone().name
+    return render_template("course_page.html", course_id=course_page.course_id, course_name=course_name, course_page_name=course_page.title, course_page_content=course_page.content)

@@ -1,6 +1,17 @@
 {% extends "layout.html" %}
-{% block title %}Kurssi: {{course_info.name}}{% endblock %}
+{% block title %}Kurssi: {{course_name}}{% endblock %}
 {% block content %}
-<h2>Kurssi: {{course_info.name}}</h2>
-<p>Tulossa.</p>
+<p><a href="/courses">Kurssit</a> > {{ course_name }}</p>
+<h2>{{ course_name }}</h2>
+<p>Kurssin opettaja: <b>{{ teacher_name }}</b></p>
+<h3>Sivut</h3>
+{% if not pages %}
+<p>Tällä kurssilla ei ole sivuja.</p>
+{% else %}
+<ol>
+{% for page in pages %}
+    <li><a href="/course_page/{{ page[0] }}">{{ page[1] }}</a></li>
+{% endfor %}
+</ol>
+{% endif %}
 {% endblock %}
