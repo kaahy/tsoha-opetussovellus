@@ -3,6 +3,7 @@ from flask import render_template, request, session, redirect
 from sqlalchemy.sql import text
 import re
 from db import db
+import users
 
 @app.route("/")
 def index():
@@ -15,17 +16,10 @@ def login():
     if request.method == "POST":
         username = request.form["name"]
         password = request.form["password"]
-        sql = text("SELECT * FROM users WHERE name=:username AND password=:password")
-        result = db.session.execute(sql, {"username":username, "password":password})
-        user = result.fetchone()
-        if not user:
-            return render_template("error.html", message="Väärä nimi tai salasana.")
-        session["session_name"] = username
-        session["user_id"] = user.id
-        session["is_teacher"] = user.is_teacher
-        return redirect("/")
-        # TODO: better password security
-    
+        if users.login(username, password):
+            return redirect("/")
+        return render_template("error.html", message="Kirjautuminen ei onnistunut.")
+
 @app.route("/logout")
 def logout():
     # TODO: fix Internal Server Error when wasn't logged in
@@ -52,21 +46,10 @@ def register():
         if not re.search("^\S(.*\S)?$", name) or not re.search("^\S(.*\S)?$", password):
             # name or password can't start or end with a white space character
             return render_template("error.html", message="Valitsemasi nimi tai salasana ei kelpaa.")
-        try:
-            sql = text("INSERT INTO users (name, password, is_teacher) VALUES (:name, :password, :is_teacher)")
-            db.session.execute(sql, {"name":name, "password":password, "is_teacher":is_teacher})
-            db.session.commit()
-        except:
-            return render_template("error.html", message="Tunnuksen luominen ei onnistunut.")
-        # login
-        sql = text("SELECT * FROM users WHERE name=:username")
-        result = db.session.execute(sql, {"username":name})
-        user = result.fetchone()
-        session["session_name"] = name
-        session["user_id"] = user.id
-        session["is_teacher"] = user.is_teacher            
-        return render_template("message.html", title="Tervetuloa", message="Tunnuksesi on luotu, " + name + ".")
-        # TODO: fix repeating code
+        if users.register(name, password, is_teacher):
+            users.login(name, password)
+            return render_template("message.html", title="Tervetuloa", message="Tunnuksesi on luotu, " + name + ".")
+        return render_template("error.html", message="Tunnuksen luominen ei onnistunut.")
 
 @app.route("/courses")
 def courses():
@@ -74,7 +57,7 @@ def courses():
     result = db.session.execute(sql)
     course_list = result.fetchall()
     return render_template("courses.html", course_list=course_list)
-    
+
 @app.route("/course/<int:course_id>")
 def course(course_id):
     sql = text("SELECT id, name, user_id FROM courses WHERE id=:course_id")
