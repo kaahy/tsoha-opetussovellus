@@ -3,6 +3,7 @@ from flask import render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from os import getenv
+import re
 
 app = Flask(__name__)
 app.secret_key = getenv("SECRET_KEY")
@@ -50,8 +51,14 @@ def register():
         is_teacher = "f"
         if request.form["role"] == "teacher":
             is_teacher = "t"
+    #if len(name) < 1 or len(password) < 1 or len(password2) < 1:
+    if not name or not password or not password2:
+        return render_template("error.html", message="Et täyttänyt kaikkia kenttiä.")    
+ 
     if password != password2:
         return render_template("error.html", message="Salasanat eivät täsmää.")
+    if not re.search("^\S(.*\S)?$", name) or not re.search("^\S(.*\S)?$", password):
+    	return render_template("error.html", message="Valitsemasi nimi tai salasana ei kelpaa.")
     try:
         sql = text("INSERT INTO users (name, password, is_teacher) VALUES (:name, :password, :is_teacher)")
         db.session.execute(sql, {"name":name, "password":password, "is_teacher":is_teacher})
