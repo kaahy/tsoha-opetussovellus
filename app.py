@@ -51,22 +51,29 @@ def register():
         is_teacher = "f"
         if request.form["role"] == "teacher":
             is_teacher = "t"
-    #if len(name) < 1 or len(password) < 1 or len(password2) < 1:
-    if not name or not password or not password2:
-        return render_template("error.html", message="Et täyttänyt kaikkia kenttiä.")    
- 
-    if password != password2:
-        return render_template("error.html", message="Salasanat eivät täsmää.")
-    if not re.search("^\S(.*\S)?$", name) or not re.search("^\S(.*\S)?$", password):
-    	return render_template("error.html", message="Valitsemasi nimi tai salasana ei kelpaa.")
-    try:
-        sql = text("INSERT INTO users (name, password, is_teacher) VALUES (:name, :password, :is_teacher)")
-        db.session.execute(sql, {"name":name, "password":password, "is_teacher":is_teacher})
-        db.session.commit()
-    except:
-        return render_template("error.html", message="Tunnuksen luominen ei onnistunut.")
-    return render_template("message.html", title="Tervetuloa", message="Tunnuksesi on luotu, " + name + ". Voit nyt kirjautua sisään.")
-    
+        if not name or not password or not password2:
+            return render_template("error.html", message="Et täyttänyt kaikkia kenttiä.")
+        if password != password2:
+            return render_template("error.html", message="Salasanat eivät täsmää.")
+        if not re.search("^\S(.*\S)?$", name) or not re.search("^\S(.*\S)?$", password):
+            # name or password can't start or end with a white space character
+            return render_template("error.html", message="Valitsemasi nimi tai salasana ei kelpaa.")
+        try:
+            sql = text("INSERT INTO users (name, password, is_teacher) VALUES (:name, :password, :is_teacher)")
+            db.session.execute(sql, {"name":name, "password":password, "is_teacher":is_teacher})
+            db.session.commit()
+        except:
+            return render_template("error.html", message="Tunnuksen luominen ei onnistunut.")
+        # login
+        sql = text("SELECT * FROM users WHERE name=:username")
+        result = db.session.execute(sql, {"username":name})
+        user = result.fetchone()
+        session["session_name"] = name
+        session["user_id"] = user.id
+        session["is_teacher"] = user.is_teacher            
+        return render_template("message.html", title="Tervetuloa", message="Tunnuksesi on luotu, " + name + ".")
+        # TODO: fix repeating code
+
 @app.route("/courses")
 def courses():
     sql = text("SELECT * FROM courses")
