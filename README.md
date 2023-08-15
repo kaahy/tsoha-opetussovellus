@@ -10,7 +10,8 @@ Opettaja voi
 - [x] luoda kurssin
 - [ ] poistaa kurssin
 - [x] lisätä kurssille materiaalia ja muokata sitä (tällä hetkellä vain tekstiä)
-- [ ] lisätä tehtäviä ja muokata niitä
+- [x] lisätä tehtäviä
+- [ ] muokata tehtäviä
 - [ ] nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät
 
 Opiskelija voi
