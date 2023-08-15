@@ -77,12 +77,16 @@ def add_course():
         if new_course_id:
             return redirect("/course/" + str(new_course_id))
 
-@app.route("/course_page/<int:course_page_id>")
+@app.route("/course_page/<int:course_page_id>", methods=["GET", "POST"])
 def course_page(course_page_id):
     page = courses.get_course_page(course_page_id)
     if not page:
         return render_template("error.html", message="Sivua ei löydy.")
-    return render_template("course_page.html", course_id=page["course_id"], course_name=page["course_name"], course_page_name=page["title"], course_page_content=page["content"], course_page_id=course_page_id)
+    if request.method == "GET":
+        quizzes = courses.get_quizzes(course_page_id)
+        return render_template("course_page.html", course_id=page["course_id"], course_name=page["course_name"], course_page_name=page["title"], course_page_content=page["content"], course_page_id=course_page_id, quizzes=quizzes["quizzes"], choices=quizzes["choices"])
+    if request.method == "POST":
+        return render_template("error.html", message="Tehtävien tarkastus ei toimi vielä.")
 
 @app.route("/course/<int:course_id>/add_page", methods=["GET", "POST"])
 def add_course_page(course_id):

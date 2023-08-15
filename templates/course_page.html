@@ -4,5 +4,22 @@
 <p><a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > {{ course_page_name }}</p>
 <h2>{{ course_page_name }}</h2>
 {{ course_page_content }}
+<hr>
+{% if quizzes %}
+<h3>Tehtävät</h3>
+<form method="POST">
+{% for quiz in quizzes %}
+    <p>
+    <b>{{ quiz.question }}</b><br>
+    {% for choice in choices[quiz.id] %}
+        <input name="quiz_{{quiz_id}}" type="checkbox" value="{{ choice.id }}"> {{ choice.content }}<br>
+    {% endfor %}
+    </p>
+{% endfor %}
+<input type="submit" value="Vastaa">
+<p>Tehtävien tarkastus ei toimi vielä.</p>
+</form>
+<hr>
+{% endif %}
 <p><a href="/course_page/{{ course_page_id }}/edit">Muokkaa sivua</a> (vain opettaja)</p>
 {% endblock %}

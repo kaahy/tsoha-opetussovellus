@@ -38,3 +38,10 @@ def add_course_page(course_id, title, content):
 def edit_course_page(course_page_id, title, content):
     db.session.execute(text("UPDATE course_pages SET title=:title, content=:content WHERE id=:id"), {"title":title, "content":content, "id":course_page_id})
     db.session.commit()
+
+def get_quizzes(course_page_id):
+    quizzes = db.session.execute(text("SELECT id, course_page_id, question FROM quizzes WHERE course_page_id=:course_page_id"), {"course_page_id":course_page_id}).fetchall()
+    choices = {}
+    for quiz in quizzes:
+        choices[quiz.id] = db.session.execute(text(f"SELECT id, content FROM choices WHERE quiz_id={quiz.id}")).fetchall()
+    return {"quizzes": quizzes, "choices": choices}
