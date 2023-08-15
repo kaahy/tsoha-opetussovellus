@@ -4,8 +4,8 @@
 <p><a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > {{ course_page_name }}</p>
 <h2>{{ course_page_name }}</h2>
 {{ course_page_content }}
-<hr>
 {% if quizzes %}
+<hr>
 <h3>Tehtävät</h3>
 <form method="POST">
 {% for quiz in quizzes %}
@@ -19,10 +19,8 @@
 <input type="submit" value="Vastaa">
 <p>Tehtävien tarkastus ei toimi vielä.</p>
 </form>
-<hr>
 {% endif %}
-<p>
-    <a href="/course_page/{{ course_page_id }}/edit">Muokkaa sivua</a> (vain opettaja)<br>
-    <a href="/course_page/{{ course_page_id }}/add_quiz">Lisää tehtävä</a> (vain opettaja)
-</p>
+<hr>
+<a href="/course_page/{{ course_page_id }}/edit">Muokkaa sivua</a> (vain opettaja)<br>
+<a href="/course_page/{{ course_page_id }}/add_quiz">Lisää tehtävä</a> (vain opettaja)
 {% endblock %}

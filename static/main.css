@@ -1,0 +1,12 @@
+body {
+    background: black;
+    padding: 1em;
+}
+.header {
+    background: lightgray;
+    padding: 1em;
+}
+.content {
+    background: white;
+    padding: 1em;
+}

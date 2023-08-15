@@ -1,17 +1,20 @@
 <!doctype html>
+<link rel="stylesheet" href="/static/main.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Opetussovellus - {% block title %}{% endblock %}</title>
+<div class="header">
 <h1>Opetussovellus</h1>
 <hr>
 <ul>
 	<li><a href="/">Etusivu</a></li>
 	<li><a href="/courses">Kurssit</a></li>
 </ul>
-<hr>
 {% if session.session_name %}
 <p>Olet kirjautunut nimellä <b>{{ session.session_name }}</b>. <a href="/logout">Kirjaudu ulos</a></p>
 {% else %}
 <p>Et ole kirjautunut. <a href="/register">Luo tunnus</a> tai <a href="/login">kirjaudu sisään</a>.</p>
 {% endif %}
-<hr>
+</div>
+<div class="content">
 {% block content %}{% endblock %}
-<hr>
+</div>
