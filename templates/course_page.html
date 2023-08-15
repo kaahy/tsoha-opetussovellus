@@ -21,5 +21,8 @@
 </form>
 <hr>
 {% endif %}
-<p><a href="/course_page/{{ course_page_id }}/edit">Muokkaa sivua</a> (vain opettaja)</p>
+<p>
+    <a href="/course_page/{{ course_page_id }}/edit">Muokkaa sivua</a> (vain opettaja)<br>
+    <a href="/course_page/{{ course_page_id }}/add_quiz">Lisää tehtävä</a> (vain opettaja)
+</p>
 {% endblock %}

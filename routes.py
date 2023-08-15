@@ -121,3 +121,26 @@ def edit_course_page(course_page_id):
     if request.method == "POST":
         courses.edit_course_page(course_page_id, request.form["title"], request.form["content"])
         return redirect(f"/course_page/{course_page_id}")
+
+@app.route("/course_page/<int:course_page_id>/add_quiz", methods=["GET", "POST"])
+def add_quiz(course_page_id):
+    if not users.is_allowed_to_edit_page(course_page_id):
+        return render_template("error.html", message="Vain kurssin opettaja voi lisätä tehtäviä.")
+    if request.method == "GET":
+        return render_template("add_quiz.html", page_id=course_page_id)
+    if request.method == "POST":
+        correct_choice_numbers = request.form.getlist("correct_choices")
+        choices = []
+        for field in request.form:
+            choice_number = re.search("^choice_([0-9]+)$", field)
+            if choice_number:
+                choice_number = choice_number[1]
+                content = request.form[field]
+                if content:
+                    is_correct = "f"
+                    if choice_number in correct_choice_numbers:
+                        is_correct = "t"
+                    choices.append({"content": content, "is_correct":is_correct})
+        if courses.add_quiz(course_page_id, request.form["question"], choices):
+            return redirect(f"/course_page/{course_page_id}")
+        return render_template("error.html", message="Tehtävän lisääminen ei onnistunut. Syötithän kysymyksen ja ainakin kaksi vaihtoehtoa?")

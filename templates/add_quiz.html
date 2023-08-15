@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Lisää tehtävä{% endblock %}
+{% block content %}
+<< <a href="/course_page/{{ page_id }}">Palaa sivulle</a>
+<h2>Lisää tehtävä</h2>
+<form method="POST">
+<p>
+    Kysymys:<br>
+    <input type="text" name="question" size="50">
+</p>
+<h3>Vaihtoehdot</h3>
+<p>Anna <b>vähintään kaksi</b> vaihtoehtoa ja merkitse oikea(t) painamalla vaihtoehdon viereistä ruutua.</p>
+<p>
+<input type="checkbox" name="correct_choices" value="1">
+<input type="text" name="choice_1" placeholder="vaihtoehto 1">
+<br>
+<input type="checkbox" name="correct_choices" value="2">
+<input type="text" name="choice_2" placeholder="vaihtoehto 2">
+<br>
+<input type="checkbox" name="correct_choices" value="3">
+<input type="text" name="choice_3" placeholder="vaihtoehto 3">
+<br>
+<input type="checkbox" name="correct_choices" value="4">
+<input type="text" name="choice_4" placeholder="vaihtoehto 4">
+<br>
+<input type="checkbox" name="correct_choices" value="5">
+<input type="text" name="choice_5" placeholder="vaihtoehto 5">
+<br>
+<input type="checkbox" name="correct_choices" value="6">
+<input type="text" name="choice_6" placeholder="vaihtoehto 6">
+<br>
+<input type="checkbox" name="correct_choices" value="7">
+<input type="text" name="choice_7" placeholder="vaihtoehto 7">
+<br>
+<input type="checkbox" name="correct_choices" value="8">
+<input type="text" name="choice_8" placeholder="vaihtoehto 8">
+<br>
+<input type="checkbox" name="correct_choices" value="9">
+<input type="text" name="choice_9" placeholder="vaihtoehto 9">
+<br>
+<input type="checkbox" name="correct_choices" value="10">
+<input type="text" name="choice_10" placeholder="vaihtoehto 10">
+</p>
+<input type="submit" value="Valmis">
+</form>
+{% endblock %}

@@ -1,6 +1,7 @@
 from flask import session
 from sqlalchemy.sql import text
 from db import db
+import courses
 
 def login(username, password):
     sql = text("SELECT * FROM users WHERE name=:username AND password=:password")
@@ -21,3 +22,13 @@ def register(name, password, is_teacher):
     except:
         return False
     return True
+
+def is_allowed_to_edit_page(page_id):
+    # this function tells if the user is logged in as the course creator
+    page = courses.get_course_page(page_id)
+    course_id = page["course_id"]
+    course_creator_id = courses.get_course(course_id)["teacher_id"]
+    if session.get("user_id"):
+        if session["user_id"] == course_creator_id:
+            return True
+    return False

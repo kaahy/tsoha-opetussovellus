@@ -45,3 +45,14 @@ def get_quizzes(course_page_id):
     for quiz in quizzes:
         choices[quiz.id] = db.session.execute(text(f"SELECT id, content FROM choices WHERE quiz_id={quiz.id}")).fetchall()
     return {"quizzes": quizzes, "choices": choices}
+
+def add_quiz(course_page_id, question, choices):
+    if not question or len(choices) < 2:
+        return False
+    quiz_id = db.session.execute(text("INSERT INTO quizzes (course_page_id, question) VALUES (:course_page_id, :question) RETURNING id"), {"course_page_id":course_page_id, "question":question}).fetchone()[0]
+    for choice in choices:
+        content = choice["content"]
+        is_correct = choice["is_correct"]
+        db.session.execute(text("INSERT INTO choices (quiz_id, content, is_correct) VALUES (:quiz_id, :content, :is_correct)"), {"quiz_id":quiz_id, "content":content, "is_correct":is_correct})   
+    db.session.commit()
+    return True
