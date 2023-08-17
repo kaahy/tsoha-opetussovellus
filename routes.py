@@ -3,6 +3,7 @@ from flask import render_template, request, session, redirect
 import re
 import users
 import courses
+import quizzes
 
 @app.route("/")
 def index():
@@ -83,15 +84,15 @@ def course_page(course_page_id):
     if not page:
         return render_template("error.html", message="Sivua ei löydy.")
     if request.method == "GET":
-        quizzes = courses.get_quizzes(course_page_id)
-        return render_template("course_page.html", course_id=page["course_id"], course_name=page["course_name"], course_page_name=page["title"], course_page_content=page["content"], course_page_id=course_page_id, quizzes=quizzes["quizzes"], choices=quizzes["choices"])
+        quizzes_info = quizzes.get_quizzes(course_page_id)
+        return render_template("course_page.html", course_id=page["course_id"], course_name=page["course_name"], course_page_name=page["title"], course_page_content=page["content"], course_page_id=course_page_id, quizzes=quizzes_info["quizzes"], choices=quizzes_info["choices"])
     if request.method == "POST":
         user_id = users.get_user_id()
         if not user_id: # TODO: course participant check
             return render_template("error.html", message="Et ole kirjautunut.")
         guesses = request.form.getlist("guesses")
-        if courses.check_quizzes(course_page_id, guesses):
-            courses.save_results(course_page_id, user_id)
+        if quizzes.check_quizzes(course_page_id, guesses):
+            quizzes.save_results(course_page_id, user_id)
             return render_template("message.html", title="Tulos", message="Sait kaikki oikein!")
         return render_template("message.html", title="Tulos", message="Et saanut kaikkia oikein.")
 
@@ -148,6 +149,6 @@ def add_quiz(course_page_id):
                     if choice_number in correct_choice_numbers:
                         is_correct = "t"
                     choices.append({"content": content, "is_correct":is_correct})
-        if courses.add_quiz(course_page_id, request.form["question"], choices):
+        if quizzes.add_quiz(course_page_id, request.form["question"], choices):
             return redirect(f"/course_page/{course_page_id}")
         return render_template("error.html", message="Tehtävän lisääminen ei onnistunut. Syötithän kysymyksen ja ainakin kaksi vaihtoehtoa?")
