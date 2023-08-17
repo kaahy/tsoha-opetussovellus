@@ -15,7 +15,7 @@ Opettaja voi
 - [ ] nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät
 
 Opiskelija voi
-- [ ] ilmoittautua kurssille ja poistua kurssilta
+- [x] ilmoittautua kurssille ja poistua kurssilta
 - [x] lukea kurssin materiaalia (tällä hetkellä kaikki voivat)
 - [ ] tehdä tehtäviä ja nähdä mitkä tehtävät on ratkaissut
 
