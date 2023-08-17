@@ -12,12 +12,11 @@
     <p>
     <b>{{ quiz.question }}</b><br>
     {% for choice in choices[quiz.id] %}
-        <input name="quiz_{{quiz_id}}" type="checkbox" value="{{ choice.id }}"> {{ choice.content }}<br>
+        <input name="guesses" type="checkbox" value="{{ choice.id }}"> {{ choice.content }}<br>
     {% endfor %}
     </p>
 {% endfor %}
 <input type="submit" value="Vastaa">
-<p>Tehtävien tarkastus ei toimi vielä.</p>
 </form>
 {% endif %}
 <hr>

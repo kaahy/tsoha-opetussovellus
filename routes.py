@@ -86,7 +86,14 @@ def course_page(course_page_id):
         quizzes = courses.get_quizzes(course_page_id)
         return render_template("course_page.html", course_id=page["course_id"], course_name=page["course_name"], course_page_name=page["title"], course_page_content=page["content"], course_page_id=course_page_id, quizzes=quizzes["quizzes"], choices=quizzes["choices"])
     if request.method == "POST":
-        return render_template("error.html", message="Tehtävien tarkastus ei toimi vielä.")
+        user_id = users.get_user_id()
+        if not user_id: # TODO: course participant check
+            return render_template("error.html", message="Et ole kirjautunut.")
+        guesses = request.form.getlist("guesses")
+        if courses.check_quizzes(course_page_id, guesses):
+            courses.save_results(course_page_id, user_id)
+            return render_template("message.html", title="Tulos", message="Sait kaikki oikein!")
+        return render_template("message.html", title="Tulos", message="Et saanut kaikkia oikein.")
 
 @app.route("/course/<int:course_id>/add_page", methods=["GET", "POST"])
 def add_course_page(course_id):

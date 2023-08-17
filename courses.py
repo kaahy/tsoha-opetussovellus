@@ -56,3 +56,18 @@ def add_quiz(course_page_id, question, choices):
         db.session.execute(text("INSERT INTO choices (quiz_id, content, is_correct) VALUES (:quiz_id, :content, :is_correct)"), {"quiz_id":quiz_id, "content":content, "is_correct":is_correct})   
     db.session.commit()
     return True
+
+def save_results(page_id, user_id):
+    # saves only correct results, at least for now
+    quiz_ids = db.session.execute(text(f"SELECT id FROM quizzes WHERE course_page_id={page_id}"))    
+    for quiz_id in quiz_ids:
+        db.session.execute(text("INSERT INTO results (user_id, quiz_id, is_correct) VALUES ("+str(user_id)+", "+str(quiz_id[0])+", 't')"))
+    db.session.commit()
+
+def check_quizzes(page_id, guesses):
+    # student needs to answer correctly to all quizzes on the page
+    correct_choices = db.session.execute(text("SELECT id FROM choices WHERE quiz_id IN (SELECT id FROM quizzes WHERE course_page_id=:page_id) AND is_correct='t'"), {"page_id":page_id}).fetchall()
+    correct_choices = [str(correct_choices[x][0]) for x in range(len(correct_choices))]
+    if sorted(correct_choices) == sorted(guesses):
+        return True
+    return False
