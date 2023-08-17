@@ -10,3 +10,9 @@ body {
     background: white;
     padding: 1em;
 }
+th {
+    background: lightgray;
+}
+td, th {
+    padding: 0.5em 1em;
+}

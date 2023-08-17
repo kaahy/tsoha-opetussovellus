@@ -3,13 +3,29 @@
 {% block content %}
 <h2>Kurssit</h2>
 {% if not course_list %}
-<p>Kursseja ei vielä ole.</p>
+<p>Kursseja ei löydy.</p>
+{% else %}
+<table>
+    <tr>
+        <th>Kurssi</th>
+        <th>Opettaja</th>
+        <th>Osallistujia</th>
+    </tr>
+    {% for course in course_list %}
+    <tr>
+        <td>
+            <a href="/course/{{ course.course_id }}">{{ course.course_name }}</a>
+        </td>
+        <td>
+            {{ course.teacher_name }}
+        </td>
+        <td style="text-align: center;">
+            {{ course.participants_amount }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 {% endif %}
-<ul>
-{% for course in course_list %}
-<li><a href="/course/{{ course.id }}">{{ course.name }}</a></li>
-{% endfor %}
-</ul>
 <hr>
 <a href="/add_course">Luo kurssi</a> (vain opettajat)
 {% endblock %}

@@ -2,8 +2,8 @@ from sqlalchemy.sql import text
 from db import db
 
 def get_courses():
-    sql = text("SELECT * FROM courses")
-    result = db.session.execute(sql)
+    sql = "SELECT courses.id AS course_id, courses.name AS course_name, users.name AS teacher_name, (SELECT COUNT(DISTINCT user_id) FROM participants WHERE course_id=courses.id) AS participants_amount FROM courses, users WHERE courses.user_id=users.id"
+    result = db.session.execute(text(sql))
     return result.fetchall()
 
 def get_course(course_id):
