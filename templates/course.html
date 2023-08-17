@@ -4,6 +4,12 @@
 <p><a href="/courses">Kurssit</a> > {{ course_name }}</p>
 <h2>{{ course_name }}</h2>
 <p>Kurssin opettaja: <b>{{ teacher_name }}</b></p>
+{% if participant %}
+<strong>Olet kurssilla.</strong>
+{% else %}
+<a href="{{ course_id }}/join">Osallistu kurssille</a>
+{% endif %}
+<hr>
 <h3>Sivut</h3>
 {% if not pages %}
 <p>Tällä kurssilla ei ole sivuja.</p>
@@ -15,5 +21,6 @@
 </ol>
 {% endif %}
 <hr>
+<br>
 <a href="/course/{{ course_id }}/add_page">Lisää sivu</a> (vain opettaja)
 {% endblock %}

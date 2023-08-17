@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block title %}Liity kurssille{% endblock %}
+{% block content %}
+<h2>Vahvista</h2>
+<p>Olet liittymässä kurssille <strong>{{ course.name }}</strong>.</p>
+<form method="POST"><input type=submit value="Osallistu"></form>
+<p><a href="/course/{{ course.id }}">Peruuta</a></p>
+{% endblock %}

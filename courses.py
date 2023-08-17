@@ -38,3 +38,20 @@ def add_course_page(course_id, title, content):
 def edit_course_page(course_page_id, title, content):
     db.session.execute(text("UPDATE course_pages SET title=:title, content=:content WHERE id=:id"), {"title":title, "content":content, "id":course_page_id})
     db.session.commit()
+
+def join(course_id, user_id):
+    try:
+        sql = f"INSERT INTO participants (course_id, user_id) VALUES ({course_id}, {user_id})"
+        db.session.execute(text(sql))
+        db.session.commit()
+        return True
+    except:
+        return False
+    
+def is_participant(user_id, course_id):
+    if not user_id:
+        return False
+    search = db.session.execute(text(f"SELECT * FROM participants WHERE user_id=:user_id AND course_id=:course_id"), {"user_id":user_id, "course_id":course_id}).fetchone()
+    if search:
+        return True
+    return False

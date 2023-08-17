@@ -59,9 +59,10 @@ def courses_page():
 @app.route("/course/<int:course_id>")
 def course_starting_page(course_id):
     course = courses.get_course(course_id)
+    is_participant = courses.is_participant(users.get_user_id(), course_id)
     if not course:
         return render_template("error.html", message="Kurssia ei löydy.")
-    return render_template("course.html", pages=course["pages"], course_name=course["name"], course_id=course["id"], teacher_name=course["teacher_name"])
+    return render_template("course.html", pages=course["pages"], course_name=course["name"], course_id=course["id"], teacher_name=course["teacher_name"], participant=is_participant)
 
 @app.route("/add_course", methods=["GET", "POST"])
 def add_course():
@@ -152,3 +153,12 @@ def add_quiz(course_page_id):
         if quizzes.add_quiz(course_page_id, request.form["question"], choices):
             return redirect(f"/course_page/{course_page_id}")
         return render_template("error.html", message="Tehtävän lisääminen ei onnistunut. Syötithän kysymyksen ja ainakin kaksi vaihtoehtoa?")
+    
+@app.route("/course/<int:course_id>/join", methods=["GET", "POST"])
+def join_course(course_id):
+    if request.method == "GET":
+        return render_template("join_course.html", course=courses.get_course(course_id))
+    if request.method == "POST":
+        if courses.join(course_id, users.get_user_id()):
+            return course_starting_page(course_id)
+        return render_template("error.html", message="Kurssille liittyminen ei onnistunut.")
