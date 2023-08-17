@@ -162,3 +162,12 @@ def join_course(course_id):
         if courses.join(course_id, users.get_user_id()):
             return course_starting_page(course_id)
         return render_template("error.html", message="Kurssille liittyminen ei onnistunut.")
+
+@app.route("/course/<int:course_id>/leave", methods=["GET", "POST"])
+def leave_course(course_id):
+    if request.method == "GET":
+        return render_template("leave_course.html", course=courses.get_course(course_id))
+    if request.method == "POST":
+        if courses.leave(course_id, users.get_user_id()):
+            return course_starting_page(course_id)
+        return render_template("error.html", message="Toiminto ei onnistunut.")

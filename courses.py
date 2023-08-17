@@ -48,6 +48,14 @@ def join(course_id, user_id):
     except:
         return False
     
+def leave(course_id, user_id):
+    try:
+        db.session.execute(text(f"DELETE FROM participants WHERE course_id={course_id} AND user_id={user_id}"))
+        db.session.commit()
+    except:
+        return False
+    return True
+    
 def is_participant(user_id, course_id):
     if not user_id:
         return False

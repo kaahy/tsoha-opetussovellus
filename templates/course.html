@@ -7,7 +7,7 @@
 {% if participant %}
 <strong>Olet kurssilla.</strong>
 {% else %}
-<a href="{{ course_id }}/join">Osallistu kurssille</a>
+<a href="/course/{{ course_id }}/join">Osallistu kurssille</a>
 {% endif %}
 <hr>
 <h3>Sivut</h3>
@@ -21,6 +21,9 @@
 </ol>
 {% endif %}
 <hr>
+{% if participant %}
+<a href="/course/{{ course_id }}/leave">Poistu kurssilta</a>
+{% endif %}
 <br>
 <a href="/course/{{ course_id }}/add_page">Lisää sivu</a> (vain opettaja)
 {% endblock %}
