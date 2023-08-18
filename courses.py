@@ -63,3 +63,7 @@ def is_participant(user_id, course_id):
     if search:
         return True
     return False
+
+def get_participants(course_id):
+    sql= f"SELECT participants.user_id AS id, users.name FROM participants, users WHERE course_id={course_id} AND participants.user_id=users.id"
+    return db.session.execute(text(sql)).fetchall()

@@ -171,3 +171,9 @@ def leave_course(course_id):
         if courses.leave(course_id, users.get_user_id()):
             return course_starting_page(course_id)
         return render_template("error.html", message="Toiminto ei onnistunut.")
+
+@app.route("/course/<int:course_id>/participants")
+def participants(course_id):
+    if users.teacher_check(course_id):
+        return render_template("participants.html", participants=courses.get_participants(course_id))
+    return render_template("error.html", message="Vain kurssin opettaja voi nähdä sivun.")

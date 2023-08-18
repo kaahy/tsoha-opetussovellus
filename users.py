@@ -36,3 +36,12 @@ def is_allowed_to_edit_page(page_id):
     if get_user_id() == course_creator_id:
         return True
     return False
+
+def teacher_check(course_id):
+    user_id = get_user_id()
+    if not user_id:
+        return False
+    sql = f"SELECT COUNT(*) FROM courses WHERE id={course_id} and user_id={user_id}"
+    if db.session.execute(text(sql)).fetchone()[0] > 0:
+        return True
+    return False

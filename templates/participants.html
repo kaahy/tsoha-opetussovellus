@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Osallistujat{% endblock %}
+{% block content %}
+<h2>Kurssin osallistujat</h2>
+{% if participants %}
+<ul>
+{% for student in participants %}
+<li>{{ student.name }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>Kurssilaisia ei löydy.</p>
+{% endif %}
+{% endblock %}
