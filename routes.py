@@ -177,3 +177,16 @@ def participants(course_id):
     if users.teacher_check(course_id):
         return render_template("participants.html", participants=courses.get_participants(course_id))
     return render_template("error.html", message="Vain kurssin opettaja voi nähdä sivun.")
+
+@app.route("/course/<int:course_id>/statistics")
+def course_statistics(course_id):
+    if users.teacher_check(course_id):
+        statistics = courses.get_course_points(course_id)
+        if not statistics:
+            return render_template("message.html", message="Kurssia tai tilastoja ei löydy.")
+        return render_template("statistics.html", statistics=statistics, max_points=courses.get_course_max_points(course_id), course_id=course_id, course_name=courses.get_course_name(course_id))
+    return render_template("error.html", message="Vain kurssin opettaja voi nähdä sivun.")
+
+@app.route("/course/<int:course_id>/statistics/user/<int:user_id>")
+def user_course_statistics(course_id, user_id):
+    return render_template("message.html", message="Tulossa.")

@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Tilastot{% endblock %}
+{% block content %}
+<p>Kurssi: <a href="/course/{{ course_id }}">{{ course_name }}</a></p>
+<h2>Tilastot</h2>
+{% if statistics %}
+<table>
+<tr>
+    <th>
+        Opiskelija
+    </th>
+    <th colspan="2">
+        Tehtävät
+    </th>
+</tr>
+{% for student in statistics %}
+<tr>
+    <td>{{ student.name }}</td>
+    <td><a href="/course/{{ course_id }}/statistics/user/{{ student.id }}">{{ student.points }}/{{ max_points }}</a></td>
+    <td><progress value="{{ student.points }}" max="{{ max_points }}"></progress></td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p>Tilastoja ei löydy.</p>
+{% endif %}
+{% endblock %}
