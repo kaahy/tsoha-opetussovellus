@@ -95,7 +95,6 @@ def get_users_page_points(user_id, page_id):
     return db.session.execute(text(sql)).fetchone()[0]
 
 def get_page_max_points(page_id):
-    # return one user's course points
     return db.session.execute(text("SELECT COUNT(*) FROM quizzes WHERE course_page_id=:page_id"), {"page_id":page_id}).fetchone()[0]
 
 def get_course_name(course_id):
