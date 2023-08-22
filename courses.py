@@ -81,3 +81,15 @@ def get_course_points(course_id):
 
 def get_course_name(course_id):
     return db.session.execute(text(f"SELECT name FROM courses WHERE id={course_id}")).fetchone()[0]
+
+def get_course_id_by_page_id(page_id):
+    sql = "SELECT course_id FROM course_pages WHERE id=:id"
+    course_id = db.session.execute(text(sql), {"id":page_id}).fetchone()[0]
+    if not course_id:
+        return None
+    return course_id
+
+def delete_page(page_id):
+    sql = f"DELETE FROM course_pages WHERE id=:id"
+    db.session.execute(text(sql), {"id":page_id})
+    db.session.commit()

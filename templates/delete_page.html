@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}Muokkaa sivua{% endblock %}
+{% block content %}
+<h2>Vahvista</h2>
+<p style="color: red">Haluatko varmasti poistaa sivun?</p>
+<form method="POST">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+<p><input type="submit" value="Poista"></p>
+<p><a href="/course_page/{{ page_id }}">Takaisin sivulle</a></p>
+</form>
+{% endblock %}

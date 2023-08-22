@@ -190,3 +190,16 @@ def course_statistics(course_id):
 @app.route("/course/<int:course_id>/statistics/user/<int:user_id>")
 def user_course_statistics(course_id, user_id):
     return render_template("message.html", message="Tulossa.")
+
+@app.route("/course_page/<int:page_id>/delete", methods=["GET", "POST"])
+def delete(page_id):
+    course_id = courses.get_course_id_by_page_id(page_id)
+    if not users.teacher_check(course_id):
+        return render_template("error.html", message="Toiminto on vain kurssin opettajalle.")
+    if request.method == "GET":
+        return render_template("delete_page.html", page_id=page_id)
+    if request.method == "POST":
+        if request.form["csrf_token"] != session["csrf_token"]:
+            return render_template("error.html", message="Sivun poistaminen ei onnistunut.")
+        courses.delete_page(page_id)
+        return redirect(f"/course/{course_id}")

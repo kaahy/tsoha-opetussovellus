@@ -3,6 +3,7 @@ from sqlalchemy.sql import text
 from db import db
 import courses
 from werkzeug.security import check_password_hash, generate_password_hash
+import secrets
 
 def login(username="", password=""):
     row = db.session.execute(text("SELECT id, password, is_teacher FROM users WHERE name=:username"), {"username":username}).fetchone()
@@ -12,6 +13,7 @@ def login(username="", password=""):
         session["session_name"] = username
         session["user_id"] = row.id
         session["is_teacher"] = row.is_teacher
+        session["csrf_token"] = secrets.token_hex(16)
         return True
     return False
 
