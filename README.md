@@ -9,15 +9,16 @@ Kaikki käyttäjät voivat
 Opettaja voi
 - [x] luoda kurssin
 - [ ] poistaa kurssin
+- [x] poistaa sivun kurssilta
 - [x] lisätä kurssille materiaalia ja muokata sitä (tällä hetkellä vain tekstiä)
 - [x] lisätä tehtäviä
 - [ ] muokata tehtäviä
-- [ ] nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät
+- [x] nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät
 
 Opiskelija voi
 - [x] ilmoittautua kurssille ja poistua kurssilta
 - [x] lukea kurssin materiaalia (tällä hetkellä kaikki voivat)
-- [ ] tehdä tehtäviä ja nähdä mitkä tehtävät on ratkaissut
+- [x] tehdä tehtäviä ja nähdä mitkä tehtävät on ratkaissut
 
 ## Huom.
 
