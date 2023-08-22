@@ -8,38 +8,38 @@ CREATE TABLE users (
 CREATE TABLE courses (
 	id SERIAL PRIMARY KEY,
 	name TEXT,
-	user_id INTEGER REFERENCES users
+	user_id INTEGER REFERENCES users ON DELETE CASCADE
 );
 
 CREATE TABLE course_pages (
 	id SERIAL PRIMARY KEY,
-	course_id INTEGER REFERENCES courses,
+	course_id INTEGER REFERENCES courses ON DELETE CASCADE,
 	title TEXT,
 	content TEXT
 );
 
 CREATE TABLE quizzes (
 	id SERIAL PRIMARY KEY,
-	course_page_id INTEGER REFERENCES course_pages,
+	course_page_id INTEGER REFERENCES course_pages ON DELETE CASCADE,
 	question TEXT
 );
 
 CREATE TABLE choices (
 	id SERIAL PRIMARY KEY,
-	quiz_id INTEGER REFERENCES quizzes,
+	quiz_id INTEGER REFERENCES quizzes ON DELETE CASCADE,
 	content TEXT,
 	is_correct BOOLEAN
 );
 
 CREATE TABLE results (
 	id SERIAL PRIMARY KEY,
-	user_id INTEGER REFERENCES users,
-	quiz_id INTEGER REFERENCES quizzes,
+	user_id INTEGER REFERENCES users ON DELETE CASCADE,
+	quiz_id INTEGER REFERENCES quizzes ON DELETE CASCADE,
 	is_correct BOOLEAN
 );
 
 CREATE TABLE participants (
 	id SERIAL PRIMARY KEY,
-	user_id INTEGER REFERENCES users,
-	course_id INTEGER REFERENCES courses
+	user_id INTEGER REFERENCES users ON DELETE CASCADE,
+	course_id INTEGER REFERENCES courses ON DELETE CASCADE
 );
