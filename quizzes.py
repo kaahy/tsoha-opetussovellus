@@ -41,3 +41,7 @@ def check_quizzes(page_id, guesses):
     if sorted(correct_choices) == sorted(guesses):
         return True
     return False
+
+def get_quiz_ids(page_id):
+    ids = db.session.execute(text("SELECT id FROM quizzes WHERE course_page_id=:course_page_id"), {"course_page_id":page_id}).fetchall()
+    return [ids[x][0] for x in range(len(ids))]

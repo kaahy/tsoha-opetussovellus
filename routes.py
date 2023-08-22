@@ -189,7 +189,17 @@ def course_statistics(course_id):
 
 @app.route("/course/<int:course_id>/statistics/user/<int:user_id>")
 def user_course_statistics(course_id, user_id):
-    return render_template("message.html", message="Tulossa.")
+    allow = False
+    if users.teacher_check(course_id) or users.get_user_id() == user_id:
+        allow = True
+    if not allow:
+        return render_template("error.html", message="Sinulla ei ole oikeuksia sisältöön.")
+    if allow:
+        statistics = courses.get_user_course_statistics(user_id, course_id)
+        course_points = courses.get_users_course_points(user_id, course_id)
+        student_name = users.get_name(user_id)
+        course_info = courses.get_course(course_id)
+        return render_template("user_course_statistics.html", statistics=statistics, course=course_info, course_points=course_points, student_name=student_name)
 
 @app.route("/course_page/<int:page_id>/delete", methods=["GET", "POST"])
 def delete(page_id):

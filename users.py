@@ -49,3 +49,7 @@ def teacher_check(course_id):
     if db.session.execute(text(sql)).fetchone()[0] > 0:
         return True
     return False
+
+def get_name(user_id):
+    sql = "SELECT name FROM users WHERE id=:id"
+    return db.session.execute(text(sql), {"id":user_id}).fetchone()[0]

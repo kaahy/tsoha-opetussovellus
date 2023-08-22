@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %}Tilastot{% endblock %}
+{% block content %}
+<p>Kurssi: <a href="/course/{{ course.id }}">{{ course.name }}</a>
+<h2>Tilastot</h2>
+<p>Opiskelija: <strong>{{ student_name }}</strong></p>
+<table>
+{% for page in statistics %}
+<tr>
+    <th colspan="2">
+        Sivu: {{ page.page_title }}
+    </th>
+</tr>
+{% if page.quizzes %}
+{% for quiz in page.quizzes %}
+<tr>
+    <td>
+        Kysymys: {{ quiz.question }}
+    </td>
+    <td>
+        {% if quiz.is_correct %}
+            <span style="color: green"><b>Ratkaistu</b></span>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+<tr>
+    <td>
+    </td>
+    <td>
+        {{ page.page_points }}/{{ page.page_max_points }}
+    </td>
+</tr>
+{% else %}
+<tr>
+    <td colspan="2">
+        <em>Sivulla ei ole tehtäviä.</em>
+    </td>
+</tr>
+{% endif %}
+{% endfor %}
+<tr>
+    <th colspan="2">
+        Yht.
+    </th>
+</tr>
+<tr>
+    <td>
+    </td>
+    <td>
+        {{ course_points }}/{{ course.max_points }}
+    </td>
+</tr>
+</table>
+{% endblock %}
