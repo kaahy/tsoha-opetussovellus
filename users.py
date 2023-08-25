@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
 import courses
 
-def login(username="", password=""):
+def login(username, password):
     row = db.session.execute(text("SELECT id, password, is_teacher FROM users WHERE name=:username"), {"username":username}).fetchone()
     if not row:
         return False
@@ -45,8 +45,8 @@ def teacher_check(course_id):
     user_id = get_user_id()
     if not user_id:
         return False
-    sql = f"SELECT COUNT(*) FROM courses WHERE id={course_id} and user_id={user_id}"
-    if db.session.execute(text(sql)).fetchone()[0] > 0:
+    sql = f"SELECT COUNT(*) FROM courses WHERE id=:course_id and user_id={user_id}"
+    if db.session.execute(text(sql), {"course_id":course_id}).fetchone()[0] > 0:
         return True
     return False
 

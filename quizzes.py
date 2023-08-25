@@ -21,16 +21,16 @@ def add_quiz(page_id, question, choices):
 
 def save_results(page_id, user_id):
     # saves only correct results, at least for now
-    quiz_ids = db.session.execute(text(f"SELECT id FROM quizzes WHERE page_id={page_id}")).fetchall()
+    quiz_ids = db.session.execute(text("SELECT id FROM quizzes WHERE page_id=:page_id"), {"page_id":page_id}).fetchall()
     quiz_ids = [quiz_ids[x][0] for x in range(len(quiz_ids))]
     for quiz_id in quiz_ids:
         if not is_quiz_solved(quiz_id, user_id):
-            db.session.execute(text(f"INSERT INTO results (user_id, quiz_id, is_correct) VALUES ('{user_id}', '{quiz_id}', 't')"))
+            db.session.execute(text(f"INSERT INTO results (user_id, quiz_id, is_correct) VALUES (:user_id, '{quiz_id}', 't')"), {"user_id":user_id})
             db.session.commit()
 
 def is_quiz_solved(quiz_id, user_id):
     sql = f"SELECT COUNT(*) FROM results WHERE quiz_id={quiz_id} AND user_id={user_id} AND is_correct='t'"
-    if db.session.execute(text(sql)).fetchone()[0]:
+    if db.session.execute(text(sql), {"quiz_id":quiz_id, "user_id":user_id}).fetchone()[0]:
         return True
     return False
 
