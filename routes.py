@@ -202,7 +202,7 @@ def user_course_statistics(course_id, user_id):
         return render_template("user_course_statistics.html", statistics=statistics, course=course_info, course_points=course_points, student_name=student_name)
 
 @app.route("/page/<int:page_id>/delete", methods=["GET", "POST"])
-def delete(page_id):
+def delete_page(page_id):
     course_id = courses.get_course_id_by_page_id(page_id)
     if not users.teacher_check(course_id):
         return render_template("error.html", message="Toiminto on vain kurssin opettajalle.")
@@ -213,3 +213,16 @@ def delete(page_id):
             return render_template("error.html", message="Sivun poistaminen ei onnistunut.")
         courses.delete_page(page_id)
         return redirect(f"/course/{course_id}")
+
+@app.route("/course/<int:course_id>/delete", methods=["GET", "POST"])
+def delete_course(course_id):
+    if not users.teacher_check(course_id):
+        return render_template("error.html", message="Toiminto on vain kurssin opettajalle.")
+    if request.method == "GET":
+        course_name = courses.get_course_name(course_id)
+        return render_template("delete_course.html", course_id=course_id, course_name=course_name)
+    if request.method == "POST":
+        if request.form["csrf_token"] != session["csrf_token"]:
+            return render_template("error.html", message="Kurssin poistaminen ei onnistu.")
+        courses.delete_course(course_id)
+        return redirect("/courses")

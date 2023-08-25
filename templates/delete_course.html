@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Poistetaanko kurssi?{% endblock %}
+{% block content %}
+<h2>Vahvista</h2>
+<p>Oletko varma?</p>
+<form method="POST">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+<p style="color: red"> Kurssi "{{ course_name }}" ja kaikki sen tiedot poistetaan pysyvästi.</p>
+<p><input type="submit" value="Poista kurssi"></p>
+<p><a href="/course/{{ course_id }}">Peruuta</a></p>
+</form>
+{% endblock %}
