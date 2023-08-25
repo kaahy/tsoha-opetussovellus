@@ -112,6 +112,11 @@ def delete_page(page_id):
     db.session.execute(text(sql), {"id":page_id})
     db.session.commit()
 
+def delete_course(id):
+    sql = f"DELETE FROM courses WHERE id=:id"
+    db.session.execute(text(sql), {"id":id})
+    db.session.commit()
+
 def get_user_course_statistics(user_id, course_id):
     result = []
     pages = db.session.execute(text("SELECT id, title FROM pages WHERE course_id=:course_id"), {"course_id":course_id}).fetchall()
