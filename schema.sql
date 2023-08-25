@@ -11,7 +11,7 @@ CREATE TABLE courses (
 	user_id INTEGER REFERENCES users ON DELETE CASCADE
 );
 
-CREATE TABLE course_pages (
+CREATE TABLE pages (
 	id SERIAL PRIMARY KEY,
 	course_id INTEGER REFERENCES courses ON DELETE CASCADE,
 	title TEXT,
@@ -20,7 +20,7 @@ CREATE TABLE course_pages (
 
 CREATE TABLE quizzes (
 	id SERIAL PRIMARY KEY,
-	course_page_id INTEGER REFERENCES course_pages ON DELETE CASCADE,
+	page_id INTEGER REFERENCES pages ON DELETE CASCADE,
 	question TEXT
 );
 

@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block title %}Kurssi: {{ course_name }}{% endblock %}
 {% block content %}
-<p><a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > {{ course_page_name }}</p>
-<h2>{{ course_page_name }}</h2>
-{{ course_page_content }}
+<p><a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > {{ page_name }}</p>
+<h2>{{ page_name }}</h2>
+{{ page_content }}
 {% if quizzes %}
 <hr>
 <h3>Tehtävät</h3>
@@ -20,7 +20,7 @@
 </form>
 {% endif %}
 <hr>
-<a href="/course_page/{{ course_page_id }}/edit">Muokkaa sivua</a> (vain opettaja)<br>
-<a href="/course_page/{{ course_page_id }}/add_quiz">Lisää tehtävä</a> (vain opettaja)<br>
-<a href="/course_page/{{ course_page_id }}/delete">Poista sivu</a> (vain opettaja)
+<a href="/page/{{ page_id }}/edit">Muokkaa sivua</a> (vain opettaja)<br>
+<a href="/page/{{ page_id }}/add_quiz">Lisää tehtävä</a> (vain opettaja)<br>
+<a href="/page/{{ page_id }}/delete">Poista sivu</a> (vain opettaja)
 {% endblock %}

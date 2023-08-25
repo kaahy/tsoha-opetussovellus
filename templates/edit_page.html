@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Muokkaa sivua{% endblock %}
+{% block content %}
+<p>
+    <a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > <a href="/page/{{ page_id }}">{{ page_title }}</a> > Muokkaa
+</p>
+<h2>Muokkaa sivua</h2>
+<form method="POST">
+    <p>
+        Otsikko:<br>
+        <input type="text" name="title" style="width:50%" value="{{ page_title }}">
+    </p>
+    <p>
+        Sisältö:<br>
+        <textarea name="content" style="width:100%" rows=20>{{ page_content }}</textarea>
+    </p>
+    
+    <p>
+        <input type="submit" value="Tallenna">
+    </p>
+</form>
+{% endblock %}

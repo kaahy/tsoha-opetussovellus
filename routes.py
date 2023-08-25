@@ -79,26 +79,26 @@ def add_course():
         if new_course_id:
             return redirect("/course/" + str(new_course_id))
 
-@app.route("/course_page/<int:course_page_id>", methods=["GET", "POST"])
-def course_page(course_page_id):
-    page = courses.get_course_page(course_page_id)
+@app.route("/page/<int:page_id>", methods=["GET", "POST"])
+def page(page_id):
+    page = courses.get_page(page_id)
     if not page:
         return render_template("error.html", message="Sivua ei löydy.")
     if request.method == "GET":
-        quizzes_info = quizzes.get_quizzes(course_page_id)
-        return render_template("course_page.html", course_id=page["course_id"], course_name=page["course_name"], course_page_name=page["title"], course_page_content=page["content"], course_page_id=course_page_id, quizzes=quizzes_info["quizzes"], choices=quizzes_info["choices"])
+        quizzes_info = quizzes.get_quizzes(page_id)
+        return render_template("page.html", course_id=page["course_id"], course_name=page["course_name"], page_name=page["title"], page_content=page["content"], page_id=page_id, quizzes=quizzes_info["quizzes"], choices=quizzes_info["choices"])
     if request.method == "POST":
         user_id = users.get_user_id()
         if not user_id: # TODO: course participant check
             return render_template("error.html", message="Et ole kirjautunut.")
         guesses = request.form.getlist("guesses")
-        if quizzes.check_quizzes(course_page_id, guesses):
-            quizzes.save_results(course_page_id, user_id)
+        if quizzes.check_quizzes(page_id, guesses):
+            quizzes.save_results(page_id, user_id)
             return render_template("message.html", title="Tulos", message="Sait kaikki oikein!")
         return render_template("message.html", title="Tulos", message="Et saanut kaikkia oikein.")
 
 @app.route("/course/<int:course_id>/add_page", methods=["GET", "POST"])
-def add_course_page(course_id):
+def add_page(course_id):
     course_creator_id = courses.get_course(course_id)["teacher_id"]
     allow = False
     if session.get("user_id"):
@@ -108,14 +108,14 @@ def add_course_page(course_id):
         return render_template("error.html", message="Et voi lisätä sivua tälle kurssille, koska et ole kirjautunut sen opettajana.")
     if request.method == "GET":
         course_name = courses.get_course(course_id)["name"]
-        return render_template("add_course_page.html", course_name=course_name, course_id=course_id)
+        return render_template("add_page.html", course_name=course_name, course_id=course_id)
     if request.method == "POST":
-        courses.add_course_page(course_id, request.form["title"], request.form["content"])
+        courses.add_page(course_id, request.form["title"], request.form["content"])
         return redirect(f"/course/{course_id}")
         
-@app.route("/course_page/<int:course_page_id>/edit", methods=["GET", "POST"])
-def edit_course_page(course_page_id):
-    page = courses.get_course_page(course_page_id)
+@app.route("/page/<int:page_id>/edit", methods=["GET", "POST"])
+def edit_page(page_id):
+    page = courses.get_page(page_id)
     course_id = page["course_id"]
     course_creator_id = courses.get_course(course_id)["teacher_id"]
     allow = False
@@ -126,17 +126,17 @@ def edit_course_page(course_page_id):
         return render_template("error.html", message="Et voi muokata tämän kurssin sivuja, koska et ole kirjautunut sen opettajana.")
     if request.method == "GET":
         course_name = courses.get_course(course_id)["name"]
-        return render_template("edit_course_page.html", course_id=course_id, course_name=course_name, course_page_id=course_page_id, course_page_title=page["title"], course_page_content=page["content"])
+        return render_template("edit_page.html", course_id=course_id, course_name=course_name, page_id=page_id, page_title=page["title"], page_content=page["content"])
     if request.method == "POST":
-        courses.edit_course_page(course_page_id, request.form["title"], request.form["content"])
-        return redirect(f"/course_page/{course_page_id}")
+        courses.edit_page(page_id, request.form["title"], request.form["content"])
+        return redirect(f"/page/{page_id}")
 
-@app.route("/course_page/<int:course_page_id>/add_quiz", methods=["GET", "POST"])
-def add_quiz(course_page_id):
-    if not users.is_allowed_to_edit_page(course_page_id):
+@app.route("/page/<int:page_id>/add_quiz", methods=["GET", "POST"])
+def add_quiz(page_id):
+    if not users.is_allowed_to_edit_page(page_id):
         return render_template("error.html", message="Vain kurssin opettaja voi lisätä tehtäviä.")
     if request.method == "GET":
-        return render_template("add_quiz.html", page_id=course_page_id)
+        return render_template("add_quiz.html", page_id=page_id)
     if request.method == "POST":
         correct_choice_numbers = request.form.getlist("correct_choices")
         choices = []
@@ -150,8 +150,8 @@ def add_quiz(course_page_id):
                     if choice_number in correct_choice_numbers:
                         is_correct = "t"
                     choices.append({"content": content, "is_correct":is_correct})
-        if quizzes.add_quiz(course_page_id, request.form["question"], choices):
-            return redirect(f"/course_page/{course_page_id}")
+        if quizzes.add_quiz(page_id, request.form["question"], choices):
+            return redirect(f"/page/{page_id}")
         return render_template("error.html", message="Tehtävän lisääminen ei onnistunut. Syötithän kysymyksen ja ainakin kaksi vaihtoehtoa?")
     
 @app.route("/course/<int:course_id>/join", methods=["GET", "POST"])
@@ -201,7 +201,7 @@ def user_course_statistics(course_id, user_id):
         course_info = courses.get_course(course_id)
         return render_template("user_course_statistics.html", statistics=statistics, course=course_info, course_points=course_points, student_name=student_name)
 
-@app.route("/course_page/<int:page_id>/delete", methods=["GET", "POST"])
+@app.route("/page/<int:page_id>/delete", methods=["GET", "POST"])
 def delete(page_id):
     course_id = courses.get_course_id_by_page_id(page_id)
     if not users.teacher_check(course_id):

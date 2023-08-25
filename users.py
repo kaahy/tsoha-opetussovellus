@@ -34,7 +34,7 @@ def get_user_id():
 
 def is_allowed_to_edit_page(page_id):
     # this function tells if the user is logged in as the course creator
-    page = courses.get_course_page(page_id)
+    page = courses.get_page(page_id)
     course_id = page["course_id"]
     course_creator_id = courses.get_course(course_id)["teacher_id"]
     if get_user_id() == course_creator_id:

@@ -15,12 +15,12 @@ def get_course(course_id):
     course_id = course.id
     teacher_id = course.user_id
     teacher_name = db.session.execute(text("SELECT name FROM users WHERE id=:id"), {"id":teacher_id}).fetchone()[0]
-    pages = db.session.execute(text("SELECT id, title FROM course_pages WHERE course_id=:course_id ORDER BY id"), {"course_id":course_id}).fetchall()
+    pages = db.session.execute(text("SELECT id, title FROM pages WHERE course_id=:course_id ORDER BY id"), {"course_id":course_id}).fetchall()
     max_points = get_course_max_points(course_id)
     return {"id": course_id, "name":name, "pages":pages, "teacher_name":teacher_name, "teacher_id":teacher_id, "max_points":max_points}
 
-def get_course_page(course_page_id):
-    page = db.session.execute(text("SELECT course_id, title, content FROM course_pages WHERE id=:id"), {"id":course_page_id}).fetchone()
+def get_page(page_id):
+    page = db.session.execute(text("SELECT course_id, title, content FROM pages WHERE id=:id"), {"id":page_id}).fetchone()
     if not page:
         return None
     course_name = get_course(page.course_id)["name"]
@@ -33,12 +33,12 @@ def add_course(course_name, user_id):
     db.session.commit()
     return course_id
 
-def add_course_page(course_id, title, content):
-    db.session.execute(text("INSERT INTO course_pages (course_id, title, content) VALUES (:course_id, :title, :content)"), {"course_id":course_id, "title":title, "content":content})
+def add_page(course_id, title, content):
+    db.session.execute(text("INSERT INTO pages (course_id, title, content) VALUES (:course_id, :title, :content)"), {"course_id":course_id, "title":title, "content":content})
     db.session.commit()
 
-def edit_course_page(course_page_id, title, content):
-    db.session.execute(text("UPDATE course_pages SET title=:title, content=:content WHERE id=:id"), {"title":title, "content":content, "id":course_page_id})
+def edit_page(page_id, title, content):
+    db.session.execute(text("UPDATE pages SET title=:title, content=:content WHERE id=:id"), {"title":title, "content":content, "id":page_id})
     db.session.commit()
 
 def join(course_id, user_id):
@@ -71,50 +71,50 @@ def get_participants(course_id):
     return db.session.execute(text(sql)).fetchall()
 
 def get_course_max_points(course_id):
-    sql = f"SELECT COUNT(*) FROM quizzes WHERE course_page_id IN (SELECT id FROM course_pages WHERE course_id={course_id})"
+    sql = f"SELECT COUNT(*) FROM quizzes WHERE page_id IN (SELECT id FROM pages WHERE course_id={course_id})"
     return db.session.execute(text(sql)).fetchone()[0]
 
 def get_course_points(course_id):
-    page_ids = f"SELECT id FROM course_pages WHERE course_id={course_id}" # pages in the course
-    quiz_ids = f"SELECT id FROM quizzes WHERE course_page_id IN ({page_ids})" # quizzes in pages
+    page_ids = f"SELECT id FROM pages WHERE course_id={course_id}" # pages in the course
+    quiz_ids = f"SELECT id FROM quizzes WHERE page_id IN ({page_ids})" # quizzes in pages
     sub = f"SELECT COUNT(DISTINCT quiz_id) FROM results WHERE is_correct='t' AND user_id=participants.user_id AND quiz_id IN ({quiz_ids})"
     sql = f"SELECT participants.user_id as id, users.name, ({sub}) AS points FROM participants, users WHERE participants.user_id=users.id AND course_id={course_id}"
     return db.session.execute(text(sql)).fetchall() # all participants' course points (id, name, points)
 
 def get_users_course_points(user_id, course_id):
     # return one user's course points
-    page_ids = f"SELECT id FROM course_pages WHERE course_id={course_id}"
-    quiz_ids = f"SELECT id FROM quizzes WHERE course_page_id IN ({page_ids})"
+    page_ids = f"SELECT id FROM pages WHERE course_id={course_id}"
+    quiz_ids = f"SELECT id FROM quizzes WHERE page_id IN ({page_ids})"
     sql = f"SELECT COUNT(DISTINCT quiz_id) FROM results WHERE is_correct='t' AND user_id=({user_id}) AND quiz_id IN ({quiz_ids})"
     return db.session.execute(text(sql)).fetchone()[0]
 
 def get_users_page_points(user_id, page_id):
     # return one user's page points
-    quiz_ids = f"SELECT id FROM quizzes WHERE course_page_id={page_id}"
+    quiz_ids = f"SELECT id FROM quizzes WHERE page_id={page_id}"
     sql = f"SELECT COUNT(DISTINCT quiz_id) FROM results WHERE is_correct='t' AND user_id=({user_id}) AND quiz_id IN ({quiz_ids})"
     return db.session.execute(text(sql)).fetchone()[0]
 
 def get_page_max_points(page_id):
-    return db.session.execute(text("SELECT COUNT(*) FROM quizzes WHERE course_page_id=:page_id"), {"page_id":page_id}).fetchone()[0]
+    return db.session.execute(text("SELECT COUNT(*) FROM quizzes WHERE page_id=:page_id"), {"page_id":page_id}).fetchone()[0]
 
 def get_course_name(course_id):
     return db.session.execute(text(f"SELECT name FROM courses WHERE id={course_id}")).fetchone()[0]
 
 def get_course_id_by_page_id(page_id):
-    sql = "SELECT course_id FROM course_pages WHERE id=:id"
+    sql = "SELECT course_id FROM pages WHERE id=:id"
     course_id = db.session.execute(text(sql), {"id":page_id}).fetchone()[0]
     if not course_id:
         return None
     return course_id
 
 def delete_page(page_id):
-    sql = f"DELETE FROM course_pages WHERE id=:id"
+    sql = f"DELETE FROM pages WHERE id=:id"
     db.session.execute(text(sql), {"id":page_id})
     db.session.commit()
 
 def get_user_course_statistics(user_id, course_id):
     result = []
-    pages = db.session.execute(text("SELECT id, title FROM course_pages WHERE course_id=:course_id"), {"course_id":course_id}).fetchall()
+    pages = db.session.execute(text("SELECT id, title FROM pages WHERE course_id=:course_id"), {"course_id":course_id}).fetchall()
     for page in pages:
         quiz_list = []
         quiz_ids = quizzes.get_quiz_ids(page.id)
@@ -126,4 +126,4 @@ def get_user_course_statistics(user_id, course_id):
     return result
 
 def get_page_title(page_id):
-    return db.session.execute(text(f"SELECT title FROM course_pages WHERE id={page_id}")).fetchone()[0]
+    return db.session.execute(text(f"SELECT title FROM pages WHERE id={page_id}")).fetchone()[0]
