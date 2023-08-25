@@ -8,6 +8,7 @@
 <hr>
 <h3>Tehtävät</h3>
 <form method="POST">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 {% for quiz in quizzes %}
     <p>
     <b>{{ quiz.question }}</b><br>

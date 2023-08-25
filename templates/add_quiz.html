@@ -4,6 +4,7 @@
 << <a href="/page/{{ page_id }}">Palaa sivulle</a>
 <h2>Lisää tehtävä</h2>
 <form method="POST">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <p>
     Kysymys:<br>
     <input type="text" name="question" size="50">

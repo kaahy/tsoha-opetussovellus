@@ -5,6 +5,7 @@
     <a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > Lisää sivu</p> 
 <h2>Lisää sivu</h2>
 <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <p>
         Otsikko:<br>
         <input type="text" name="title" style="width:50%">

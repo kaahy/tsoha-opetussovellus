@@ -1,4 +1,4 @@
-from flask import session
+from flask import session, request, abort
 from sqlalchemy.sql import text
 from db import db
 import courses
@@ -53,3 +53,7 @@ def teacher_check(course_id):
 def get_name(user_id):
     sql = "SELECT name FROM users WHERE id=:id"
     return db.session.execute(text(sql), {"id":user_id}).fetchone()[0]
+
+def check_csrf():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)

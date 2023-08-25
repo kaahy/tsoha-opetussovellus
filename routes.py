@@ -75,6 +75,7 @@ def add_course():
     if request.method == "GET":
         return render_template("add_course.html")
     if request.method == "POST":
+        users.check_csrf()
         new_course_id = courses.add_course(request.form["course_name"], session["user_id"])
         if new_course_id:
             return redirect("/course/" + str(new_course_id))
@@ -91,6 +92,7 @@ def page(page_id):
         user_id = users.get_user_id()
         if not user_id: # TODO: course participant check
             return render_template("error.html", message="Et ole kirjautunut.")
+        users.check_csrf()
         guesses = request.form.getlist("guesses")
         if quizzes.check_quizzes(page_id, guesses):
             quizzes.save_results(page_id, user_id)
@@ -110,6 +112,7 @@ def add_page(course_id):
         course_name = courses.get_course(course_id)["name"]
         return render_template("add_page.html", course_name=course_name, course_id=course_id)
     if request.method == "POST":
+        users.check_csrf()
         courses.add_page(course_id, request.form["title"], request.form["content"])
         return redirect(f"/course/{course_id}")
         
@@ -128,6 +131,7 @@ def edit_page(page_id):
         course_name = courses.get_course(course_id)["name"]
         return render_template("edit_page.html", course_id=course_id, course_name=course_name, page_id=page_id, page_title=page["title"], page_content=page["content"])
     if request.method == "POST":
+        users.check_csrf()
         courses.edit_page(page_id, request.form["title"], request.form["content"])
         return redirect(f"/page/{page_id}")
 
@@ -138,6 +142,7 @@ def add_quiz(page_id):
     if request.method == "GET":
         return render_template("add_quiz.html", page_id=page_id)
     if request.method == "POST":
+        users.check_csrf()
         correct_choice_numbers = request.form.getlist("correct_choices")
         choices = []
         for field in request.form:
@@ -159,6 +164,7 @@ def join_course(course_id):
     if request.method == "GET":
         return render_template("join_course.html", course=courses.get_course(course_id))
     if request.method == "POST":
+        users.check_csrf()
         if courses.join(course_id, users.get_user_id()):
             return course_starting_page(course_id)
         return render_template("error.html", message="Kurssille liittyminen ei onnistunut.")
@@ -168,6 +174,7 @@ def leave_course(course_id):
     if request.method == "GET":
         return render_template("leave_course.html", course=courses.get_course(course_id))
     if request.method == "POST":
+        users.check_csrf()
         if courses.leave(course_id, users.get_user_id()):
             return course_starting_page(course_id)
         return render_template("error.html", message="Toiminto ei onnistunut.")
@@ -209,8 +216,7 @@ def delete_page(page_id):
     if request.method == "GET":
         return render_template("delete_page.html", page_id=page_id)
     if request.method == "POST":
-        if request.form["csrf_token"] != session["csrf_token"]:
-            return render_template("error.html", message="Sivun poistaminen ei onnistunut.")
+        users.check_csrf()
         courses.delete_page(page_id)
         return redirect(f"/course/{course_id}")
 
@@ -222,7 +228,6 @@ def delete_course(course_id):
         course_name = courses.get_course_name(course_id)
         return render_template("delete_course.html", course_id=course_id, course_name=course_name)
     if request.method == "POST":
-        if request.form["csrf_token"] != session["csrf_token"]:
-            return render_template("error.html", message="Kurssin poistaminen ei onnistu.")
+        users.check_csrf()
         courses.delete_course(course_id)
         return redirect("/courses")
