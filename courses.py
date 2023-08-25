@@ -49,7 +49,7 @@ def join(course_id, user_id):
         return True
     except:
         return False
-    
+
 def leave(course_id, user_id):
     try:
         db.session.execute(text(f"DELETE FROM participants WHERE course_id={course_id} AND user_id={user_id}"))
@@ -57,11 +57,11 @@ def leave(course_id, user_id):
     except:
         return False
     return True
-    
+
 def is_participant(user_id, course_id):
     if not user_id:
         return False
-    search = db.session.execute(text(f"SELECT * FROM participants WHERE user_id=:user_id AND course_id=:course_id"), {"user_id":user_id, "course_id":course_id}).fetchone()
+    search = db.session.execute(text("SELECT * FROM participants WHERE user_id=:user_id AND course_id=:course_id"), {"user_id":user_id, "course_id":course_id}).fetchone()
     if search:
         return True
     return False
@@ -108,13 +108,13 @@ def get_course_id_by_page_id(page_id):
     return course_id
 
 def delete_page(page_id):
-    sql = f"DELETE FROM pages WHERE id=:id"
+    sql = "DELETE FROM pages WHERE id=:id"
     db.session.execute(text(sql), {"id":page_id})
     db.session.commit()
 
-def delete_course(id):
-    sql = f"DELETE FROM courses WHERE id=:id"
-    db.session.execute(text(sql), {"id":id})
+def delete_course(course_id):
+    sql = "DELETE FROM courses WHERE id=:id"
+    db.session.execute(text(sql), {"id":course_id})
     db.session.commit()
 
 def get_user_course_statistics(user_id, course_id):
@@ -124,7 +124,6 @@ def get_user_course_statistics(user_id, course_id):
         quiz_list = []
         quiz_ids = quizzes.get_quiz_ids(page.id)
         for quiz_id in quiz_ids:
-            print(quiz_ids, quiz_id, "on quiz id")
             question = db.session.execute(text(f"SELECT question FROM quizzes WHERE id={quiz_id}")).fetchone()[0]
             quiz_list.append({"quiz_id": quiz_id, "question": question, "is_correct": quizzes.is_quiz_solved(quiz_id, user_id)})
         result.append({"page_id": page.id, "page_title": get_page_title(page.id), "page_points": get_users_page_points(user_id, page.id), "page_max_points": get_page_max_points(page.id), "quizzes": quiz_list})

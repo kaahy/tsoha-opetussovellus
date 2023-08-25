@@ -1,6 +1,6 @@
-from app import app
-from flask import render_template, request, session, redirect
 import re
+from flask import render_template, request, session, redirect
+from app import app
 import users
 import courses
 import quizzes
@@ -43,7 +43,7 @@ def register():
             return render_template("error.html", message="Et täyttänyt kaikkia kenttiä.")
         if password != password2:
             return render_template("error.html", message="Salasanat eivät täsmää.")
-        if not re.search("^\S(.*\S)?$", name) or not re.search("^\S(.*\S)?$", password):
+        if not re.search("^\\S(.*\\S)?$", name) or not re.search("^\\S(.*\\S)?$", password):
             # name or password can't start or end with a white space character
             return render_template("error.html", message="Valitsemasi nimi tai salasana ei kelpaa.")
         if users.register(name, password, is_teacher):
@@ -68,7 +68,7 @@ def course_starting_page(course_id):
 def add_course():
     is_teacher = False
     if session.get("is_teacher"):
-        if session["is_teacher"] == True:
+        if session["is_teacher"] is True:
             is_teacher = True
     if not is_teacher:
         return render_template("error.html", message="Et voi luoda kurssia, koska et ole kirjautunut opettajan tunnuksella.")
@@ -81,7 +81,7 @@ def add_course():
             return redirect("/course/" + str(new_course_id))
 
 @app.route("/page/<int:page_id>", methods=["GET", "POST"])
-def page(page_id):
+def show_page(page_id):
     page = courses.get_page(page_id)
     if not page:
         return render_template("error.html", message="Sivua ei löydy.")
@@ -115,7 +115,7 @@ def add_page(course_id):
         users.check_csrf()
         courses.add_page(course_id, request.form["title"], request.form["content"])
         return redirect(f"/course/{course_id}")
-        
+
 @app.route("/page/<int:page_id>/edit", methods=["GET", "POST"])
 def edit_page(page_id):
     page = courses.get_page(page_id)
@@ -158,7 +158,7 @@ def add_quiz(page_id):
         if quizzes.add_quiz(page_id, request.form["question"], choices):
             return redirect(f"/page/{page_id}")
         return render_template("error.html", message="Tehtävän lisääminen ei onnistunut. Syötithän kysymyksen ja ainakin kaksi vaihtoehtoa?")
-    
+
 @app.route("/course/<int:course_id>/join", methods=["GET", "POST"])
 def join_course(course_id):
     if request.method == "GET":

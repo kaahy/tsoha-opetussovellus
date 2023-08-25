@@ -1,9 +1,9 @@
+import secrets
 from flask import session, request, abort
 from sqlalchemy.sql import text
+from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
 import courses
-from werkzeug.security import check_password_hash, generate_password_hash
-import secrets
 
 def login(username="", password=""):
     row = db.session.execute(text("SELECT id, password, is_teacher FROM users WHERE name=:username"), {"username":username}).fetchone()

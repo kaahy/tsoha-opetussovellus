@@ -15,7 +15,7 @@ def add_quiz(page_id, question, choices):
     for choice in choices:
         content = choice["content"]
         is_correct = choice["is_correct"]
-        db.session.execute(text("INSERT INTO choices (quiz_id, content, is_correct) VALUES (:quiz_id, :content, :is_correct)"), {"quiz_id":quiz_id, "content":content, "is_correct":is_correct})   
+        db.session.execute(text("INSERT INTO choices (quiz_id, content, is_correct) VALUES (:quiz_id, :content, :is_correct)"), {"quiz_id":quiz_id, "content":content, "is_correct":is_correct})
     db.session.commit()
     return True
 
