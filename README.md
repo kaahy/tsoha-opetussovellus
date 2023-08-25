@@ -8,7 +8,7 @@ Kaikki käyttäjät voivat
 
 Opettaja voi
 - [x] luoda kurssin
-- [ ] poistaa kurssin
+- [x] poistaa kurssin
 - [x] poistaa sivun kurssilta
 - [x] lisätä kurssille materiaalia ja muokata sitä (tällä hetkellä vain tekstiä)
 - [x] lisätä tehtäviä
