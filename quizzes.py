@@ -29,7 +29,7 @@ def save_results(page_id, user_id):
             db.session.commit()
 
 def is_quiz_solved(quiz_id, user_id):
-    sql = f"SELECT COUNT(*) FROM results WHERE quiz_id=:quiz_id AND user_id=:user_id AND is_correct='t'"
+    sql = "SELECT COUNT(*) FROM results WHERE quiz_id=:quiz_id AND user_id=:user_id AND is_correct='t'"
     if db.session.execute(text(sql), {"quiz_id":quiz_id, "user_id":user_id}).fetchone()[0]:
         return True
     return False
