@@ -6,7 +6,8 @@ from db import db
 import courses
 
 def login(username, password):
-    row = db.session.execute(text("SELECT id, password, is_teacher FROM users WHERE name=:username"), {"username":username}).fetchone()
+    sql = "SELECT id, password, is_teacher FROM users WHERE name=:username"
+    row = db.session.execute(text(sql), {"username":username}).fetchone()
     if not row:
         return False
     if check_password_hash(row[1], password):
@@ -28,8 +29,9 @@ def logout():
 def register(name, password, is_teacher):
     try:
         password = generate_password_hash(password)
-        sql = text("INSERT INTO users (name, password, is_teacher) VALUES (:name, :password, :is_teacher)")
-        db.session.execute(sql, {"name":name, "password":password, "is_teacher":is_teacher})
+        sql = """INSERT INTO users (name, password, is_teacher)
+                 VALUES (:name, :password, :is_teacher)"""
+        db.session.execute(text(sql), {"name":name, "password":password, "is_teacher":is_teacher})
         db.session.commit()
     except:
         return False
