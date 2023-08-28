@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block title %}Tilastot{% endblock %}
 {% block content %}
-<p>Kurssi: <a href="/course/{{ course.id }}">{{ course.name }}</a>
-<h2>Tilastot</h2>
-<p>Opiskelija: <strong>{{ student_name }}</strong></p>
+<p>Kurssi: <a href="/course/{{ course.id }}">{{ course.name }}</a></p>
+<h2>Opiskelijan tilastot</h2>
+<p>Opiskelija: <a href="/profile/{{ student_id }}">{{ student_name }}</a></p>
 <table>
 {% for page in statistics %}
 <tr>

@@ -5,7 +5,7 @@
 {% if participants %}
 <ul>
 {% for student in participants %}
-<li>{{ student.name }}</li>
+<li><a href="/profile/{{ student.id }}">{{ student.name }}</a></li>
 {% endfor %}
 </ul>
 {% else %}

@@ -10,7 +10,7 @@
 	<li><a href="/courses">Kurssit</a></li>
 </ul>
 {% if session.session_name %}
-<p>Olet kirjautunut nimellä <b>{{ session.session_name }}</b>. <a href="/logout">Kirjaudu ulos</a></p>
+<p>Olet kirjautunut nimellä <b><a href="/profile/{{ session.user_id }}">{{ session.session_name }}</a></b>. <a href="/logout">Kirjaudu ulos</a></p>
 {% else %}
 <p>Et ole kirjautunut. <a href="/register">Luo tunnus</a> tai <a href="/login">kirjaudu sisään</a>.</p>
 {% endif %}

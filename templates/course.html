@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 {% block title %}Kurssi: {{course_name}}{% endblock %}
 {% block content %}
-<p><a href="/courses">Kurssit</a> > {{ course_name }}</p>
-<h2>{{ course_name }}</h2>
-<p>Kurssin opettaja: <b>{{ teacher_name }}</b></p>
+<p><a href="/courses">Kurssit</a> > {{ course_info.name }}</p>
+<h2>{{ course_info.name }}</h2>
+<p>Kurssin opettaja: <b><a href="/profile/{{ course_info.teacher_id }}">{{ course_info.teacher_name }}</a></b></p>
 {% if participant %}
 <strong>Olet kurssilla.</strong>
 {% else %}
-<a href="/course/{{ course_id }}/join">Osallistu kurssille</a>
+<a href="/course/{{ course_info.id }}/join">Osallistu kurssille</a>
 {% endif %}
 <hr>
 <h3>Sivut</h3>
@@ -22,15 +22,15 @@
 {% endif %}
 <hr>
 {% if participant %}
-<a href="/course/{{ course_id }}/statistics/user/{{ session.user_id }}">Omat tilastot</a><br>
-<a href="/course/{{ course_id }}/leave">Poistu kurssilta</a>
+<a href="/course/{{ course_info.id }}/statistics/user/{{ session.user_id }}">Omat tilastot</a><br>
+<a href="/course/{{ course_info.id }}/leave">Poistu kurssilta</a>
 {% endif %}
 <br>
-<a href="/course/{{ course_id }}/add_page">Lisää sivu</a> (vain opettaja)
+<a href="/course/{{ course_info.id }}/add_page">Lisää sivu</a> (vain opettaja)
 <br>
-<a href="/course/{{ course_id }}/participants">Osallistujat</a> (vain opettaja)
+<a href="/course/{{ course_info.id }}/participants">Osallistujat</a> (vain opettaja)
 <br>
-<a href="/course/{{ course_id }}/statistics">Tilastot</a> (vain opettaja)
+<a href="/course/{{ course_info.id }}/statistics">Tilastot</a> (vain opettaja)
 <br>
-<a href="/course/{{ course_id }}/delete">Poista kurssi</a> (vain opettaja)
+<a href="/course/{{ course_info.id }}/delete">Poista kurssi</a> (vain opettaja)
 {% endblock %}

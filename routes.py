@@ -62,7 +62,7 @@ def course_starting_page(course_id):
     is_participant = courses.is_participant(users.get_user_id(), course_id)
     if not course:
         return render_template("error.html", message="Kurssia ei löydy.")
-    return render_template("course.html", pages=course["pages"], course_name=course["name"], course_id=course["id"], teacher_name=course["teacher_name"], participant=is_participant)
+    return render_template("course.html", course_info=course, pages=course["pages"], participant=is_participant)
 
 @app.route("/add_course", methods=["GET", "POST"])
 def add_course():
@@ -206,7 +206,7 @@ def user_course_statistics(course_id, user_id):
         course_points = courses.get_users_course_points(user_id, course_id)
         student_name = users.get_name(user_id)
         course_info = courses.get_course(course_id)
-        return render_template("user_course_statistics.html", statistics=statistics, course=course_info, course_points=course_points, student_name=student_name)
+        return render_template("user_course_statistics.html", statistics=statistics, course=course_info, course_points=course_points, student_name=student_name, student_id=user_id)
 
 @app.route("/page/<int:page_id>/delete", methods=["GET", "POST"])
 def delete_page(page_id):
@@ -231,3 +231,11 @@ def delete_course(course_id):
         users.check_csrf()
         courses.delete_course(course_id)
         return redirect("/courses")
+
+@app.route("/profile/<int:user_id>")
+def profile(user_id):
+    joined_courses = courses.get_joined_courses(user_id)
+    teached_courses = courses.get_teached_courses(user_id)
+    name = users.get_name(user_id)
+    is_teacher = users.is_teacher(user_id)
+    return render_template("profile.html", is_teacher=is_teacher, name=name, joined_courses=joined_courses, teached_courses=teached_courses)

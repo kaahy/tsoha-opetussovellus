@@ -3,7 +3,7 @@ from db import db
 import quizzes
 
 def get_courses():
-    sql = "SELECT courses.id AS course_id, courses.name AS course_name, users.name AS teacher_name, (SELECT COUNT(DISTINCT user_id) FROM participants WHERE course_id=courses.id) AS participants_amount FROM courses, users WHERE courses.user_id=users.id"
+    sql = "SELECT courses.id AS course_id, courses.name AS course_name, users.name AS teacher_name, courses.user_id AS teacher_id, (SELECT COUNT(DISTINCT user_id) FROM participants WHERE course_id=courses.id) AS participants_amount FROM courses, users WHERE courses.user_id=users.id"
     result = db.session.execute(text(sql))
     return result.fetchall()
 
@@ -134,3 +134,11 @@ def get_user_course_statistics(user_id, course_id):
 def get_page_title(page_id):
     sql = "SELECT title FROM pages WHERE id=:page_id"
     return db.session.execute(text(sql), {"page_id":page_id}).fetchone()[0]
+
+def get_teached_courses(user_id):
+    sql = "SELECT id, name FROM courses WHERE user_id=:user_id"
+    return db.session.execute(text(sql), {"user_id":user_id}).fetchall()
+
+def get_joined_courses(user_id):
+    sql = "SELECT courses.id, courses.name FROM courses, participants WHERE courses.id=participants.course_id AND participants.user_id=:user_id"
+    return db.session.execute(text(sql), {"user_id":user_id}).fetchall()

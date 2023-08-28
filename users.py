@@ -57,3 +57,9 @@ def get_name(user_id):
 def check_csrf():
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
+
+def is_teacher(user_id):
+    sql = "SELECT COUNT(*) FROM users WHERE id=:user_id AND is_teacher='t'"
+    if db.session.execute(text(sql), {"user_id":user_id}).fetchone()[0]:
+        return True
+    return False

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Profiili: {{ name }}{% endblock %}
+{% block content %}
+<h2>Profiili</h2>
+<p>Nimi: {{ name }}<br>
+Rooli: {% if is_teacher %}opettaja{% else %}opiskelija{% endif %}</p>
+{% if teached_courses %}
+    <h3>Kurssit (opettaja)</h3>
+    <ul>
+    {% for course in teached_courses %}
+    <li><a href="/course/{{ course.id }}">{{ course.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    {% if is_teacher %}
+    <h3>Kurssit (opettaja)</h3><em>Ei kursseja.</em>
+    {% endif %}
+{% endif %}
+{% if joined_courses %}
+    <h3>Kurssit (opiskelija)</h3>
+    <ul>
+    {% for course in joined_courses %}
+    <li><a href="/course/{{ course.id }}">{{ course.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    {% if not is_teacher %}
+    <h3>Kurssit (opiskelija)</h3><em>Ei kursseja.</em>
+    {% endif %}
+{% endif %}
+{% endblock %}
