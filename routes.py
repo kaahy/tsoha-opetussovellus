@@ -63,11 +63,7 @@ def course_starting_page(course_id):
 
 @app.route("/add_course", methods=["GET", "POST"])
 def add_course():
-    is_teacher = False
-    if session.get("is_teacher"):
-        if session["is_teacher"] is True:
-            is_teacher = True
-    if not is_teacher:
+    if not users.is_teacher(users.get_user_id()):
         return render_template("error.html", message="Et voi luoda kurssia, koska et ole kirjautunut opettajan tunnuksella.")
     if request.method == "GET":
         return render_template("add_course.html", min=forms.get_min("course name"), max=forms.get_max("course name"))
@@ -101,12 +97,7 @@ def show_page(page_id):
 
 @app.route("/course/<int:course_id>/add_page", methods=["GET", "POST"])
 def add_page(course_id):
-    course_creator_id = courses.get_course(course_id)["teacher_id"]
-    allow = False
-    if session.get("user_id"):
-        if session["user_id"] == course_creator_id:
-            allow = True
-    if not allow:
+    if not users.teacher_check(course_id):
         return render_template("error.html", message="Et voi lisätä sivua tälle kurssille, koska et ole kirjautunut sen opettajana.")
     if request.method == "GET":
         course_name = courses.get_course(course_id)["name"]
@@ -122,16 +113,11 @@ def add_page(course_id):
 
 @app.route("/page/<int:page_id>/edit", methods=["GET", "POST"])
 def edit_page(page_id):
-    page = courses.get_page(page_id)
-    course_id = page["course_id"]
-    course_creator_id = courses.get_course(course_id)["teacher_id"]
-    allow = False
-    if session.get("user_id"):
-        if session["user_id"] == course_creator_id:
-            allow = True
-    if not allow:
+    if not users.is_allowed_to_edit_page(page_id):
         return render_template("error.html", message="Et voi muokata tämän kurssin sivuja, koska et ole kirjautunut sen opettajana.")
     if request.method == "GET":
+        page = courses.get_page(page_id)
+        course_id = page["course_id"]
         course_name = courses.get_course(course_id)["name"]
         return render_template("edit_page.html", course_id=course_id, course_name=course_name, page_id=page_id, page_title=page["title"], page_content=page["content"], title_min=forms.get_min("page title"), title_max=forms.get_max("page title"), content_min=forms.get_min("page content"), content_max=forms.get_max("page content"))
     if request.method == "POST":
