@@ -4,6 +4,7 @@ from app import app
 import users
 import courses
 import quizzes
+import forms
 
 @app.route("/")
 def index():
@@ -31,9 +32,9 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
-        return render_template("register.html")
+        return render_template("register.html", name_min=forms.get_min("name"), name_max=forms.get_max("name"), password_min=forms.get_min("password"), password_max=forms.get_max("password"))
     if request.method == "POST":
-        name = request.form["name"]
+        name = request.form["name"].strip()
         password  = request.form["password1"]
         password2 = request.form["password2"]
         is_teacher = "f"
@@ -41,11 +42,10 @@ def register():
             is_teacher = "t"
         if not name or not password or not password2:
             return render_template("error.html", message="Et täyttänyt kaikkia kenttiä.")
+        if not forms.check_length(name, "name") or not forms.check_length(password, "password"):
+            return render_template("error.html", message="Nimen tai salasanan pituus ei kelpaa.")
         if password != password2:
-            return render_template("error.html", message="Salasanat eivät täsmää.")
-        if not re.search("^\\S(.*\\S)?$", name) or not re.search("^\\S(.*\\S)?$", password):
-            # name or password can't start or end with a white space character
-            return render_template("error.html", message="Valitsemasi nimi tai salasana ei kelpaa.")
+            return render_template("error.html", message="Salasanat eivät täsmää.") 
         if users.register(name, password, is_teacher):
             users.login(name, password)
             return render_template("message.html", title="Tervetuloa", message="Tunnuksesi on luotu, " + name + ".")
@@ -73,10 +73,13 @@ def add_course():
     if not is_teacher:
         return render_template("error.html", message="Et voi luoda kurssia, koska et ole kirjautunut opettajan tunnuksella.")
     if request.method == "GET":
-        return render_template("add_course.html")
+        return render_template("add_course.html", min=forms.get_min("course name"), max=forms.get_max("course name"))
     if request.method == "POST":
+        course_name = request.form["course_name"]
+        if not forms.check_length(course_name, "course name"):
+            return render_template("error.html", message="Syötit liikaa tai liian vähän tekstiä.")
         users.check_csrf()
-        new_course_id = courses.add_course(request.form["course_name"], session["user_id"])
+        new_course_id = courses.add_course(course_name, session["user_id"])
         if new_course_id:
             return redirect("/course/" + str(new_course_id))
 
@@ -110,10 +113,14 @@ def add_page(course_id):
         return render_template("error.html", message="Et voi lisätä sivua tälle kurssille, koska et ole kirjautunut sen opettajana.")
     if request.method == "GET":
         course_name = courses.get_course(course_id)["name"]
-        return render_template("add_page.html", course_name=course_name, course_id=course_id)
+        return render_template("add_page.html", course_name=course_name, course_id=course_id, title_min=forms.get_min("page title"), title_max=forms.get_max("page title"), content_min=forms.get_min("page content"), content_max=forms.get_max("page content"))
     if request.method == "POST":
         users.check_csrf()
-        courses.add_page(course_id, request.form["title"], request.form["content"])
+        page_title = request.form["title"]
+        page_content = request.form["content"]
+        if not forms.check_length(page_title, "page title"):
+            return render_template("error.html", message="Syötit liikaa tai liian vähän tekstiä.")
+        courses.add_page(course_id, page_title, page_content)
         return redirect(f"/course/{course_id}")
 
 @app.route("/page/<int:page_id>/edit", methods=["GET", "POST"])
@@ -129,9 +136,11 @@ def edit_page(page_id):
         return render_template("error.html", message="Et voi muokata tämän kurssin sivuja, koska et ole kirjautunut sen opettajana.")
     if request.method == "GET":
         course_name = courses.get_course(course_id)["name"]
-        return render_template("edit_page.html", course_id=course_id, course_name=course_name, page_id=page_id, page_title=page["title"], page_content=page["content"])
+        return render_template("edit_page.html", course_id=course_id, course_name=course_name, page_id=page_id, page_title=page["title"], page_content=page["content"], title_min=forms.get_min("page title"), title_max=forms.get_max("page title"), content_min=forms.get_min("page content"), content_max=forms.get_max("page content"))
     if request.method == "POST":
         users.check_csrf()
+        if not forms.check_length(request.form["title"], "page title"):
+            return render_template("error.html", message="Syötit liikaa tai liian vähän tekstiä.")
         courses.edit_page(page_id, request.form["title"], request.form["content"])
         return redirect(f"/page/{page_id}")
 
@@ -140,7 +149,7 @@ def add_quiz(page_id):
     if not users.is_allowed_to_edit_page(page_id):
         return render_template("error.html", message="Vain kurssin opettaja voi lisätä tehtäviä.")
     if request.method == "GET":
-        return render_template("add_quiz.html", page_id=page_id)
+        return render_template("add_quiz.html", page_id=page_id, choice_min=forms.get_min("choice"), choice_max=forms.get_max("choice"),  question_min=forms.get_min("question"), question_max=forms.get_max("question"))
     if request.method == "POST":
         users.check_csrf()
         correct_choice_numbers = request.form.getlist("correct_choices")

@@ -4,11 +4,11 @@
 <h2>Luo tunnus</h2>
 <form method="POST">
 Nimi:<br>
-<input type="text" name="name"><br><br>
+<input type="text" name="name" minlength="{{ name_min }}" maxlength="{{ name_max }}" required><br><br>
 Salasana:<br>
-<input type="password" name="password1"><br><br>
+<input type="password" name="password1" minlength="{{ password_min }}" maxlength="{{ password_max }}" required><br><br>
 Salasana uudelleen:<br>
-<input type="password" name="password2"><br><br>
+<input type="password" name="password2" minlength="{{ password_min }}" maxlength="{{ password_max }}" required><br><br>
 Rooli:
 <select name="role">
     <option value="student">opiskelija</option>

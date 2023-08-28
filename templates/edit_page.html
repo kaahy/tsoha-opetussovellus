@@ -9,11 +9,11 @@
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <p>
         Otsikko:<br>
-        <input type="text" name="title" style="width:50%" value="{{ page_title }}">
+        <input type="text" name="title" style="width:50%" value="{{ page_title }}" minlength="{{ title_min }}" maxlength="{{ title_max }}" required>
     </p>
     <p>
         Sisältö:<br>
-        <textarea name="content" style="width:100%" rows=20>{{ page_content }}</textarea>
+        <textarea name="content" style="width:100%" rows=20 minlength="{{ content_min }}" maxlength="{{ content_max }}">{{ page_content }}</textarea>
     </p>
     
     <p>

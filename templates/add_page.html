@@ -8,11 +8,11 @@
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <p>
         Otsikko:<br>
-        <input type="text" name="title" style="width:50%">
+        <input type="text" name="title" style="width:50%" minlength="{{ title_min }}" maxlength="{{ title_max }}" required>
     </p>
     <p>
         Sisältö:<br>
-        <textarea name="content" style="width:100%" rows=20></textarea>
+        <textarea name="content" style="width:100%" rows=20 minlength="{{ content_min }}" maxlength="{{ content_max }}"></textarea>
     </p>
     <p>
         <input type="submit" value="Tallenna">
