@@ -23,10 +23,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    # TODO: fix Internal Server Error when wasn't logged in
-    del session["session_name"]
-    del session["user_id"]
-    del session["is_teacher"]
+    users.logout()
     return redirect("/")
 
 @app.route("/register", methods=["GET", "POST"])

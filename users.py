@@ -17,6 +17,14 @@ def login(username, password):
         return True
     return False
 
+def logout():
+    if session.get("session_name"):
+        del session["session_name"]
+    if session.get("user_id"):
+        del session["user_id"]
+    if "is_teacher" in session:
+        del session["is_teacher"]
+
 def register(name, password, is_teacher):
     try:
         password = generate_password_hash(password)
