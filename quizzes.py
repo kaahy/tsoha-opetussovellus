@@ -24,6 +24,16 @@ def add_quiz(page_id, question, choices):
     db.session.commit()
     return True
 
+def delete_quiz(quiz_id):
+    sql = "DELETE FROM quizzes WHERE id=:id"
+    db.session.execute(text(sql), {"id":quiz_id})
+    db.session.commit()
+
+def move_quiz(quiz_id, page_id):
+    sql = "UPDATE quizzes SET page_id=:page_id WHERE id=:quiz_id"
+    db.session.execute(text(sql), {"quiz_id":quiz_id, "page_id":page_id})
+    db.session.commit()
+
 def save_results(page_id, user_id):
     # saves only correct results, at least for now
     sql = "SELECT id FROM quizzes WHERE page_id=:page_id"

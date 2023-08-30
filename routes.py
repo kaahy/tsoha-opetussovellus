@@ -231,3 +231,24 @@ def profile(user_id):
     name = users.get_name(user_id)
     is_teacher = users.is_teacher(user_id)
     return render_template("profile.html", is_teacher=is_teacher, name=name, joined_courses=joined_courses, teached_courses=teached_courses)
+
+@app.route("/page/<int:page_id>/edit_quizzes", methods=["GET", "POST"])
+def edit_quizzes(page_id):
+    if not users.is_allowed_to_edit_page(page_id):
+        return render_template("error.html", message="Toiminto on vain kurssin opettajalle.")
+    if request.method == "GET":
+        return render_template("edit_quizzes.html", page_id=page_id, quizzes=quizzes.get_quizzes(page_id)["quizzes"], pages=courses.get_pages(courses.get_course_id_by_page_id(page_id)))
+    if request.method == "POST":
+        quiz_id = request.form["quiz_id"]
+        if int(quiz_id) not in quizzes.get_quiz_ids(page_id):
+            return render_template("error.html", message="Toiminto ei onnistu.")
+        users.check_csrf()
+        if request.form["action"] == "delete":
+            quizzes.delete_quiz(quiz_id)
+            return redirect(f"/page/{page_id}")
+        if request.form["action"] == "move":
+            new_page_id = request.form["page_id"]
+            if not users.is_allowed_to_edit_page(new_page_id):
+                return render_template("error.html", message="Toiminto on vain kurssin opettajalle.")
+            quizzes.move_quiz(quiz_id, new_page_id)
+            return redirect(f"/page/{new_page_id}")

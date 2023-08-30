@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Muokkaa tehtävää{% endblock %}
+{% block content %}
+<h2>Muokkaa tehtävää</h2>
+{% if quizzes %}
+<form method="POST">
+    <h3>Kysymys</h3>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <select name="quiz_id">
+        {% for quiz in quizzes %}
+        <option value="{{ quiz.id }}"> {{ quiz.question }} </option>
+        {% endfor %}
+    </select>
+    <br>
+    <h3>Toiminto</h3>
+    <p>
+        {% if pages[1] %}
+        <input type="radio" name="action" value="move"> Siirrä sivulle
+        <select name="page_id">
+            {% for new_page in pages %}
+                {% if new_page.id != page_id %}
+                <option value="{{ new_page.id }}"> {{ new_page.title }} </option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <br>
+        {% endif %}
+        <input type="radio" name="action" value="delete" required> <span style="color: red">Poista</span>
+    </p>
+    <input type="submit" value="Vahvista">
+</form>
+{% else %}
+<p>
+    <em>Sivulla ei ole tehtäviä.</em>
+</p>
+<p>
+    <a href="/page/{{ page_id }}/add_quiz">Lisää tehtävä</a>
+</p>
+{% endif %}
+{% endblock %}

@@ -36,6 +36,10 @@ def get_page(page_id):
     course_name = get_course(page.course_id)["name"]
     return {"title":page.title, "content":page.content, "course_name":course_name, "course_id":page.course_id}
 
+def get_pages(course_id):
+    sql = "SELECT id, title FROM pages WHERE course_id=:course_id ORDER BY id"
+    return db.session.execute(text(sql), {"course_id":course_id}).fetchall()
+
 def add_course(course_name, user_id):
     sql = text("INSERT INTO courses (name, user_id) VALUES (:name, :user_id) RETURNING id")
     result = db.session.execute(sql, {"name":course_name, "user_id":user_id})
