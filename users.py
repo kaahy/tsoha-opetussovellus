@@ -43,10 +43,8 @@ def delete(user_id):
     db.session.commit()
 
 def exists(user_id):
-    sql = "SELECT id FROM users WHERE id=:user_id";
-    if db.session.execute(text(sql), {"user_id":user_id}).fetchone():
-        return True
-    return False
+    sql = "SELECT id FROM users WHERE id=:user_id"
+    return db.session.execute(text(sql), {"user_id":user_id}).fetchone()
 
 def get_user_id():
     if session.get("user_id"):
@@ -58,18 +56,14 @@ def is_allowed_to_edit_page(page_id):
     page = courses.get_page(page_id)
     course_id = page["course_id"]
     course_creator_id = courses.get_course(course_id)["teacher_id"]
-    if get_user_id() == course_creator_id:
-        return True
-    return False
+    return get_user_id() == course_creator_id
 
 def teacher_check(course_id):
     user_id = get_user_id()
     if not user_id:
         return False
     sql = f"SELECT COUNT(*) FROM courses WHERE id=:course_id and user_id={user_id}"
-    if db.session.execute(text(sql), {"course_id":course_id}).fetchone()[0] > 0:
-        return True
-    return False
+    return db.session.execute(text(sql), {"course_id":course_id}).fetchone()[0] > 0
 
 def get_name(user_id):
     sql = "SELECT name FROM users WHERE id=:id"
@@ -80,7 +74,5 @@ def check_csrf():
         abort(403)
 
 def is_teacher(user_id):
-    sql = "SELECT COUNT(*) FROM users WHERE id=:user_id AND is_teacher='t'"
-    if db.session.execute(text(sql), {"user_id":user_id}).fetchone()[0]:
-        return True
-    return False
+    sql = "SELECT COUNT(id) FROM users WHERE id=:user_id AND is_teacher='t'"
+    return db.session.execute(text(sql), {"user_id":user_id}).fetchone()[0]

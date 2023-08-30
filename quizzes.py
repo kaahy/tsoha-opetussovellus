@@ -48,9 +48,7 @@ def save_results(page_id, user_id):
 def is_quiz_solved(quiz_id, user_id):
     sql = """SELECT COUNT(*) FROM results
              WHERE quiz_id=:quiz_id AND user_id=:user_id AND is_correct='t'"""
-    if db.session.execute(text(sql), {"quiz_id":quiz_id, "user_id":user_id}).fetchone()[0]:
-        return True
-    return False
+    return db.session.execute(text(sql), {"quiz_id":quiz_id, "user_id":user_id}).fetchone()[0]
 
 def check_quizzes(page_id, guesses):
     # student needs to answer correctly to all quizzes on the page
@@ -58,9 +56,7 @@ def check_quizzes(page_id, guesses):
     sql = "SELECT id FROM choices WHERE quiz_id IN " + sub + " AND is_correct='t'"
     correct_choices = db.session.execute(text(sql), {"page_id":page_id}).fetchall()
     correct_choices = [str(correct_choices[x][0]) for x in range(len(correct_choices))]
-    if sorted(correct_choices) == sorted(guesses):
-        return True
-    return False
+    return sorted(correct_choices) == sorted(guesses)
 
 def get_quiz_ids(page_id):
     sql = "SELECT id FROM quizzes WHERE page_id=:page_id"

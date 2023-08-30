@@ -42,7 +42,7 @@ def register():
         if not forms.check_length(name, "name") or not forms.check_length(password, "password"):
             return render_template("error.html", message="Nimen tai salasanan pituus ei kelpaa.")
         if password != password2:
-            return render_template("error.html", message="Salasanat eivät täsmää.") 
+            return render_template("error.html", message="Salasanat eivät täsmää.")
         if users.register(name, password, is_teacher):
             users.login(name, password)
             return render_template("message.html", title="Tervetuloa", message="Tunnuksesi on luotu, " + name + ".")
@@ -179,26 +179,22 @@ def participants(course_id):
 
 @app.route("/course/<int:course_id>/statistics")
 def course_statistics(course_id):
-    if users.teacher_check(course_id):
-        statistics = courses.get_course_points(course_id)
-        if not statistics:
-            return render_template("message.html", message="Kurssia tai tilastoja ei löydy.")
-        return render_template("statistics.html", statistics=statistics, max_points=courses.get_course_max_points(course_id), course_id=course_id, course_name=courses.get_course_name(course_id))
-    return render_template("error.html", message="Vain kurssin opettaja voi nähdä sivun.")
+    if not users.teacher_check(course_id):
+        return render_template("error.html", message="Vain kurssin opettaja voi nähdä sivun.")
+    statistics = courses.get_course_points(course_id)
+    if not statistics:
+        return render_template("message.html", message="Kurssia tai tilastoja ei löydy.")
+    return render_template("statistics.html", statistics=statistics, max_points=courses.get_course_max_points(course_id), course_id=course_id, course_name=courses.get_course_name(course_id))
 
 @app.route("/course/<int:course_id>/statistics/user/<int:user_id>")
 def user_course_statistics(course_id, user_id):
-    allow = False
-    if users.teacher_check(course_id) or users.get_user_id() == user_id:
-        allow = True
-    if not allow:
+    if not users.teacher_check(course_id) and not users.get_user_id() == user_id:
         return render_template("error.html", message="Sinulla ei ole oikeuksia sisältöön.")
-    if allow:
-        statistics = courses.get_user_course_statistics(user_id, course_id)
-        course_points = courses.get_users_course_points(user_id, course_id)
-        student_name = users.get_name(user_id)
-        course_info = courses.get_course(course_id)
-        return render_template("user_course_statistics.html", statistics=statistics, course=course_info, course_points=course_points, student_name=student_name, student_id=user_id)
+    statistics = courses.get_user_course_statistics(user_id, course_id)
+    course_points = courses.get_users_course_points(user_id, course_id)
+    student_name = users.get_name(user_id)
+    course_info = courses.get_course(course_id)
+    return render_template("user_course_statistics.html", statistics=statistics, course=course_info, course_points=course_points, student_name=student_name, student_id=user_id)
 
 @app.route("/page/<int:page_id>/delete", methods=["GET", "POST"])
 def delete_page(page_id):
