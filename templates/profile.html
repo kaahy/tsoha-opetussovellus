@@ -13,7 +13,8 @@ Rooli: {% if is_teacher %}opettaja{% else %}opiskelija{% endif %}</p>
     </ul>
 {% else %}
     {% if is_teacher %}
-    <h3>Kurssit (opettaja)</h3><em>Ei kursseja.</em>
+    <h3>Kurssit (opettaja)</h3>
+    <em>Ei kursseja.</em>
     {% endif %}
 {% endif %}
 {% if joined_courses %}
@@ -25,7 +26,12 @@ Rooli: {% if is_teacher %}opettaja{% else %}opiskelija{% endif %}</p>
     </ul>
 {% else %}
     {% if not is_teacher %}
-    <h3>Kurssit (opiskelija)</h3><em>Ei kursseja.</em>
+    <h3>Kurssit (opiskelija)</h3>
+    <em>Ei kursseja.</em>
     {% endif %}
+{% endif %}
+{% if user_id == session.user_id %}
+<hr>
+<a href="/delete">Poista tunnus</a>
 {% endif %}
 {% endblock %}

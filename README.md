@@ -3,7 +3,7 @@
 Sovelluksella toteutetaan verkkokursseja ja niihin liittyviä automaattisesti tarkastettavia monivalintatehtäviä. Käyttäjä on joko opettaja tai oppilas. 
 
 Kaikki käyttäjät voivat
-- [x] luoda tunnuksen sekä kirjautua sisään ja ulos
+- [x] luoda ja poistaa tunnuksen sekä kirjautua sisään ja ulos
 - [x] nähdä olemassa olevat kurssit
 
 Opettaja voi

@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Poista tunnus{% endblock %}
+{% block content %}
+<h2>Vahvista</h2>
+<form method="POST">
+<p style="color: red">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="hidden" name="user_id" value="{{ session.user_id}}">
+    <input type="checkbox" name="confirm_user_deletion">
+    Poistan tunnukseni lopullisesti.
+</p>
+<input type="submit" value="Poista">
+<p>
+    <a href="/profile/{{ session.user_id }}">Peruuta</a>
+</p>
+</form>
+{% endblock %}

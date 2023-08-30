@@ -226,11 +226,13 @@ def delete_course(course_id):
 
 @app.route("/profile/<int:user_id>")
 def profile(user_id):
+    if not users.exists(user_id):
+        return render_template("message.html", message="Käyttäjää ei löydy.")
     joined_courses = courses.get_joined_courses(user_id)
     teached_courses = courses.get_teached_courses(user_id)
     name = users.get_name(user_id)
     is_teacher = users.is_teacher(user_id)
-    return render_template("profile.html", is_teacher=is_teacher, name=name, joined_courses=joined_courses, teached_courses=teached_courses)
+    return render_template("profile.html", user_id=user_id, is_teacher=is_teacher, name=name, joined_courses=joined_courses, teached_courses=teached_courses)
 
 @app.route("/page/<int:page_id>/edit_quizzes", methods=["GET", "POST"])
 def edit_quizzes(page_id):
@@ -252,3 +254,18 @@ def edit_quizzes(page_id):
                 return render_template("error.html", message="Toiminto on vain kurssin opettajalle.")
             quizzes.move_quiz(quiz_id, new_page_id)
             return redirect(f"/page/{new_page_id}")
+
+@app.route("/delete", methods=["GET", "POST"])
+def delete_user():
+    if request.method == "GET":
+        return render_template("delete_user.html")
+    if request.method == "POST":
+        users.check_csrf()
+        user_id = int(request.form["user_id"])
+        if not "confirm_user_deletion" in request.form:
+            return redirect(f"/profile/{user_id}")
+        if user_id == users.get_user_id():
+            users.delete(user_id)
+            logout()
+            return redirect("/")
+        return render_template("error.html", message="Et ole kirjautunut tunnuksella, jota yrität poistaa.")

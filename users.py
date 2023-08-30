@@ -37,6 +37,17 @@ def register(name, password, is_teacher):
         return False
     return True
 
+def delete(user_id):
+    sql = "DELETE FROM users WHERE id=:user_id"
+    db.session.execute(text(sql), {"user_id":user_id})
+    db.session.commit()
+
+def exists(user_id):
+    sql = "SELECT id FROM users WHERE id=:user_id";
+    if db.session.execute(text(sql), {"user_id":user_id}).fetchone():
+        return True
+    return False
+
 def get_user_id():
     if session.get("user_id"):
         return session.get("user_id")
