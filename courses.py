@@ -95,8 +95,10 @@ def get_course_points(course_id):
     page_ids = "SELECT id FROM pages WHERE course_id=:course_id" # pages in the course
     quiz_ids = "SELECT id FROM quizzes WHERE page_id IN (" + page_ids + ")" # quizzes in pages
     sub = """SELECT COUNT(DISTINCT quiz_id) FROM results
-             WHERE is_correct='t' AND user_id=participants.user_id AND quiz_id IN (" + quiz_ids + ")"""
-    sql = """SELECT participants.user_id as id, users.name, (" + sub + ") AS points
+             WHERE is_correct='t'
+                AND user_id=participants.user_id
+                AND quiz_id IN (""" + quiz_ids + """)"""
+    sql = """SELECT participants.user_id as id, users.name, (""" + sub + """) AS points
              FROM participants, users
              WHERE participants.user_id=users.id AND course_id=:course_id"""
     return db.session.execute(text(sql), {"course_id":course_id}).fetchall()
@@ -106,14 +108,14 @@ def get_users_course_points(user_id, course_id):
     page_ids = "SELECT id FROM pages WHERE course_id=:course_id"
     quiz_ids = "SELECT id FROM quizzes WHERE page_id IN (" + page_ids + ")"
     sql = """SELECT COUNT(DISTINCT quiz_id) FROM results
-             WHERE is_correct='t' AND user_id=:user_id AND quiz_id IN (" + quiz_ids + ")"""
+             WHERE is_correct='t' AND user_id=:user_id AND quiz_id IN (""" + quiz_ids + """)"""
     return db.session.execute(text(sql), {"course_id":course_id, "user_id":user_id}).fetchone()[0]
 
 def get_users_page_points(user_id, page_id):
     # return one user's page points
     sub = "SELECT id FROM quizzes WHERE page_id=:page_id"
     sql = """SELECT COUNT(DISTINCT quiz_id) FROM results
-             WHERE is_correct='t' AND user_id=:user_id AND quiz_id IN (" + sub + ")"""
+             WHERE is_correct='t' AND user_id=:user_id AND quiz_id IN (""" + sub + """)"""
     return db.session.execute(text(sql), {"user_id":user_id, "page_id":page_id}).fetchone()[0]
 
 def get_page_max_points(page_id):
