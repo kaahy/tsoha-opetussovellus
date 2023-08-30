@@ -7,11 +7,10 @@ Kaikki käyttäjät voivat
 - [x] nähdä olemassa olevat kurssit
 
 Opettaja voi
-- [x] luoda kurssin
-- [x] poistaa kurssin
-- [x] poistaa sivun kurssilta
-- [x] lisätä kurssille materiaalia ja muokata sitä (tällä hetkellä vain tekstiä)
-- [x] lisätä tehtäviä
+- [x] luoda ja poistaa kurssin
+- [x] lisätä, poistaa ja muokata kurssin sivuja (tällä hetkellä vain tekstiä)
+- [x] lisätä ja poistaa tehtäviä
+- [x] siirtää tehtävän eri sivulle
 - [ ] muokata tehtäviä
 - [x] nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät
 
