@@ -5,7 +5,7 @@
 <p style="color: red">Olet poistumassa kurssilta <strong>{{ course.name }}</strong>.</p>
 <form method="POST">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type=submit value="Poistu">
+    <p><input type=submit value="Poistu"></p>
 </form>
 <p><a href="/course/{{ course.id }}">Peruuta</a></p>
 {% endblock %}

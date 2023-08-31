@@ -1,19 +1,21 @@
 body {
     background: black;
-    padding: 1em 1em 2em 1em;
 }
-.header {
-    background: lightgray;
-    padding: 1em;
+.container {
+    background: gray;
+    margin: 2em auto;
 }
-.content {
+.col-3 {
+    background: lightgrey;
+    padding: 2em;
+}
+.col-9 {
     background: white;
-    padding: 1em 1em 2em 1em;
+    padding: 2em;
+}
+h2 {
+    margin-bottom: 0.5em;
 }
 th {
-    text-align: left;
     background: lightgray;
-}
-td, th {
-    padding: 0.5em 1em;
 }

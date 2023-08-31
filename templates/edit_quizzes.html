@@ -4,15 +4,15 @@
 <h2>Muokkaa tehtävää</h2>
 {% if quizzes %}
 <form method="POST">
-    <h3>Kysymys</h3>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <select name="quiz_id">
-        {% for quiz in quizzes %}
-        <option value="{{ quiz.id }}"> {{ quiz.question }} </option>
-        {% endfor %}
-    </select>
-    <br>
-    <h3>Toiminto</h3>
+    <p>
+        Tehtävä:
+        <select name="quiz_id">
+            {% for quiz in quizzes %}
+            <option value="{{ quiz.id }}"> {{ quiz.question }} </option>
+            {% endfor %}
+        </select>
+    </p>
     <p>
         {% if pages[1] %}
         <input type="radio" name="action" value="move"> Siirrä sivulle

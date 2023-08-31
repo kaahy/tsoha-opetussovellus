@@ -4,7 +4,7 @@
 <p>Kurssi: <a href="/course/{{ course.id }}">{{ course.name }}</a></p>
 <h2>Opiskelijan tilastot</h2>
 <p>Opiskelija: <a href="/profile/{{ student_id }}">{{ student_name }}</a></p>
-<table>
+<table class="table">
 {% for page in statistics %}
 <tr>
     <th colspan="2">

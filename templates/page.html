@@ -1,28 +1,43 @@
 {% extends "layout.html" %}
 {% block title %}Kurssi: {{ course_name }}{% endblock %}
-{% block content %}
-<p><a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > {{ page_name }}</p>
-<h2>{{ page_name }}</h2>
-{{ page_content }}
-{% if quizzes %}
-<hr>
-<h3>Tehtävät</h3>
-<form method="POST">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-{% for quiz in quizzes %}
-    <p>
-    <b>{{ quiz.question }}</b><br>
-    {% for choice in choices[quiz.id] %}
-        <input name="guesses" type="checkbox" value="{{ choice.id }}"> {{ choice.content }}<br>
+{% block side %}
+    <b>Sivut</b>
+    <br>
+    {% if pages %}
+    {% for page in pages %}
+    <a href="/page/{{ page[0] }}">{{ page[1] }}</a><br>
     {% endfor %}
+    {% else %}
+    <em>Kurssilla ei ole sivuja.</em>
+    {% endif %}
+    <hr>
+    <b>Opettajan toiminnot</b>
+    <br>
+    <a href="/page/{{ page_id }}/edit">Muokkaa sivua</a><br>
+    <a href="/page/{{ page_id }}/add_quiz">Lisää tehtävä</a><br>
+    <a href="/page/{{ page_id }}/edit_quizzes">Muokkaa tehtäviä</a><br>
+    <a href="/page/{{ page_id }}/delete">Poista sivu</a>
+{% endblock %}
+{% block content %}
+    <p>
+        <a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > {{ page_name }}
     </p>
-{% endfor %}
-<input type="submit" value="Vastaa">
-</form>
-{% endif %}
-<hr>
-<a href="/page/{{ page_id }}/edit">Muokkaa sivua</a> (vain opettaja)<br>
-<a href="/page/{{ page_id }}/add_quiz">Lisää tehtävä</a> (vain opettaja)<br>
-<a href="/page/{{ page_id }}/edit_quizzes">Muokkaa tehtäviä</a> (vain opettaja)<br>
-<a href="/page/{{ page_id }}/delete">Poista sivu</a> (vain opettaja)
+    <h2>{{ page_name }}</h2>
+    {{ page_content }}
+    {% if quizzes %}
+    <hr>
+    <h3>Tehtävät</h3>
+    <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    {% for quiz in quizzes %}
+    <p>
+        <b>{{ quiz.question }}</b><br>
+        {% for choice in choices[quiz.id] %}
+            <input name="guesses" type="checkbox" value="{{ choice.id }}"> {{ choice.content }}<br>
+        {% endfor %}
+    </p>
+    {% endfor %}
+    <input type="submit" value="Vastaa">
+    </form>
+    {% endif %}
 {% endblock %}
