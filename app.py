@@ -5,3 +5,7 @@ app = Flask(__name__)
 app.secret_key = getenv("SECRET_KEY")
 
 import routes
+
+from flaskext.markdown import Markdown
+
+Markdown(app)

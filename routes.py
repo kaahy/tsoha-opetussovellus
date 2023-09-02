@@ -5,9 +5,6 @@ import users
 import courses
 import quizzes
 import forms
-from flaskext.markdown import Markdown
-
-Markdown(app)
 
 @app.route("/")
 def index():
