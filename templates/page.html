@@ -23,7 +23,7 @@
         <a href="/courses">Kurssit</a> > <a href="/course/{{ course_id }}">{{ course_name }}</a> > {{ page_name }}
     </p>
     <h2>{{ page_name }}</h2>
-    {{ page_content }}
+    {{ page_content|markdown }}
     {% if quizzes %}
     <hr>
     <h3>Tehtävät</h3>
