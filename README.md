@@ -8,7 +8,7 @@ Kaikki käyttäjät voivat
 
 Opettaja voi
 - luoda ja poistaa kurssin
-- lisätä, poistaa ja muokata kurssin sivuja
+- lisätä, poistaa ja muokata (markdown-syntaksia hyödyntäen) kurssin sivuja
 - lisätä ja poistaa tehtäviä
 - siirtää tehtävän eri sivulle
 - nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät.
