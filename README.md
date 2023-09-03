@@ -1,33 +1,29 @@
 # Opetussovellus
 
-Sovelluksella toteutetaan verkkokursseja ja niihin liittyviä automaattisesti tarkastettavia monivalintatehtäviä. Käyttäjä on joko opettaja tai oppilas. 
+Sovelluksella toteutetaan verkkokursseja ja niihin liittyviä automaattisesti tarkastettavia monivalintatehtäviä. Käyttäjä on kirjautuneena joko opettaja tai oppilas.
 
 Kaikki käyttäjät voivat
-- [x] luoda ja poistaa tunnuksen sekä kirjautua sisään ja ulos
-- [x] nähdä olemassa olevat kurssit
+- luoda ja poistaa tunnuksen sekä kirjautua sisään ja ulos
+- nähdä olemassa olevat kurssit sisältöineen.
 
 Opettaja voi
-- [x] luoda ja poistaa kurssin
-- [x] lisätä, poistaa ja muokata kurssin sivuja (tällä hetkellä vain tekstiä)
-- [x] lisätä ja poistaa tehtäviä
-- [x] siirtää tehtävän eri sivulle
-- [ ] muokata tehtäviä
-- [x] nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät
+- luoda ja poistaa kurssin
+- lisätä, poistaa ja muokata kurssin sivuja
+- lisätä ja poistaa tehtäviä
+- siirtää tehtävän eri sivulle
+- nähdä kurssilla olevat opiskelijat ja heidän ratkaisemansa tehtävät.
 
 Opiskelija voi
-- [x] ilmoittautua kurssille ja poistua kurssilta
-- [x] lukea kurssin materiaalia (tällä hetkellä kaikki voivat)
-- [x] tehdä tehtäviä ja nähdä mitkä tehtävät on ratkaissut
+- ilmoittautua kurssille ja poistua kurssilta
+- tehdä tehtäviä ja nähdä mitkä tehtävät on ratkaissut.
 
-## Huom.
-
-Sovellusta pystyy ainakin toistaiseksi käyttämään **vain paikallisesti.** Ohjeet tähän ovat alla.
+Sovellus on testattavissa vain paikallisesti. Ohjeet tähän ovat alla.
 
 ## Käynnistysohjeet
 
-- **Kloonaa** tämä repositorio koneellesi
-- Siirry repositorion **juurikansioon**
-- Luo **.env**-tiedosto
+- **Kloonaa** tämä repositorio koneellesi.
+- Siirry repositorion **juurikansioon**.
+- Luo **.env**-tiedosto.
 - Lisää .env-tiedostoon rivit **DATABASE_URL=[tietokannan paikallinen osoite]** ja **SECRET_KEY=[salainen avain]**
 - Luo **virtuaaliympäristö** komennolla `python3 -m venv venv`
 - Aktivoi virtuaaliympäristö: `source venv/bin/activate`
