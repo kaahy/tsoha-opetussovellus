@@ -21,6 +21,7 @@
         <a href="/course/{{ course_info.id }}/join">Osallistu kurssille</a>
         {% endif %}
     </p>
+    {% if session.is_teacher %}
     <p>
         <b>Opettajan toiminnot</b><br>
         <a href="/course/{{ course_info.id }}/add_page">Lisää sivu</a><br>
@@ -28,6 +29,7 @@
         <a href="/course/{{ course_info.id }}/statistics">Tilastot</a><br>
         <a href="/course/{{ course_info.id }}/delete">Poista kurssi</a>
     </p>
+    {% endif %}
 {% endblock %}
 {% block content %}
     <p>

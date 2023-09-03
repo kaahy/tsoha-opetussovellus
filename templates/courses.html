@@ -1,8 +1,10 @@
 {% extends "layout.html" %}
 {% block title %}Kurssit{% endblock %}
 {% block side %}
+    {% if session.is_teacher %}
     <b>Opettajan toiminnot</b><br>
     <a href="/add_course">Luo kurssi</a>
+    {% endif %}
 {% endblock %}
 {% block content %}
     <h2>Kurssit</h2>

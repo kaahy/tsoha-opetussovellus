@@ -11,12 +11,14 @@
     <em>Kurssilla ei ole sivuja.</em>
     {% endif %}
     <hr>
+    {% if session.is_teacher %}
     <b>Opettajan toiminnot</b>
     <br>
     <a href="/page/{{ page_id }}/edit">Muokkaa sivua</a><br>
     <a href="/page/{{ page_id }}/add_quiz">Lisää tehtävä</a><br>
     <a href="/page/{{ page_id }}/edit_quizzes">Muokkaa tehtäviä</a><br>
     <a href="/page/{{ page_id }}/delete">Poista sivu</a>
+    {% endif %}
 {% endblock %}
 {% block content %}
     <p>
