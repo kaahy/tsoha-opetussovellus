@@ -70,6 +70,8 @@ def get_name(user_id):
     return db.session.execute(text(sql), {"id":user_id}).fetchone()[0]
 
 def check_csrf():
+    if "csrf_token" not in session or "csrf_token" not in request.form:
+        abort(403)
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
 

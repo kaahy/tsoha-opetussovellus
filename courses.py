@@ -76,9 +76,10 @@ def leave(course_id, user_id):
     return True
 
 def is_participant(user_id, course_id):
+    print("is part...")
     if not user_id:
         return False
-    sql = "SELECT * FROM participants WHERE user_id=:user_id AND course_id=:course_id"
+    sql = "SELECT id FROM participants WHERE user_id=:user_id AND course_id=:course_id"
     search = db.session.execute(text(sql), {"user_id":user_id, "course_id":course_id}).fetchone()
     if search:
         return True
