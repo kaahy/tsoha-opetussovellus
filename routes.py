@@ -268,5 +268,5 @@ def delete_user():
         if user_id == users.get_user_id():
             users.delete(user_id)
             logout()
-            return redirect("/")
+            return render_template("message.html", title="Poistettu", message="Tunnuksesi on poistettu.")
         return render_template("error.html", message="Et ole kirjautunut tunnuksella, jota yrität poistaa.")
