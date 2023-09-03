@@ -154,6 +154,8 @@ def add_quiz(page_id):
 
 @app.route("/course/<int:course_id>/join", methods=["GET", "POST"])
 def join_course(course_id):
+    if not users.get_user_id():
+        return render_template("error.html", message="Et ole kirjautunut.")
     if request.method == "GET":
         return render_template("join_course.html", course=courses.get_course(course_id))
     if request.method == "POST":
@@ -254,6 +256,8 @@ def edit_quizzes(page_id):
 
 @app.route("/delete", methods=["GET", "POST"])
 def delete_user():
+    if not users.get_user_id():
+        return render_template("error.html", message="Et ole kirjautunut.")
     if request.method == "GET":
         return render_template("delete_user.html")
     if request.method == "POST":
