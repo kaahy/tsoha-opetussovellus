@@ -8,7 +8,7 @@ import forms
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return redirect("/courses")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
