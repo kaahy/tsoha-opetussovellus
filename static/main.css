@@ -2,7 +2,7 @@ body {
     background: black;
 }
 .container {
-    background: gray;
+    background: #343a40;
     margin: 2em auto;
 }
 .col-3 {
