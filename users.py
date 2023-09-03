@@ -26,12 +26,12 @@ def logout():
     if "is_teacher" in session:
         del session["is_teacher"]
 
-def register(name, password, is_teacher):
+def register(name, password, teacher):
     try:
         password = generate_password_hash(password)
         sql = """INSERT INTO users (name, password, is_teacher)
                  VALUES (:name, :password, :is_teacher)"""
-        db.session.execute(text(sql), {"name":name, "password":password, "is_teacher":is_teacher})
+        db.session.execute(text(sql), {"name":name, "password":password, "is_teacher":teacher})
         db.session.commit()
     except:
         return False

@@ -16,26 +16,14 @@ max_lengths = {"name": 50,
            "choice": 200
     }
 
-default_min = 0
-default_max = 99
+DEFAULT_MIN = 0
+DEFAULT_MAX = 99
 
-def check_length(content="", type=None):
-    min = default_min
-    max = default_max
-    if type in min_lengths:
-        min = min_lengths[type]
-    if type in max_lengths:
-        max = max_lengths[type]
-    if len(content.strip()) < min or len(content) > max:
-        return False
-    return True
+def check_length(content="", input_name=None):
+    return len(content.strip()) >= get_min(input_name) and len(content) <= get_max(input_name)
 
-def get_min(type=None):
-    if type in min_lengths:
-        return min_lengths[type]
-    return default_min
+def get_min(input_name=None):
+    return min_lengths.get(input_name, DEFAULT_MIN)
 
-def get_max(type=None):
-    if type in max_lengths:
-        return max_lengths[type]
-    return default_max
+def get_max(input_name=None):
+    return max_lengths.get(input_name, DEFAULT_MAX)

@@ -87,7 +87,7 @@ def show_page(page_id):
         return render_template("page.html", pages=courses.get_pages(course_id), course_id=course_id, course_name=page["course_name"], page_name=page["title"], page_content=page["content"], page_id=page_id, quizzes=quizzes_info["quizzes"], choices=quizzes_info["choices"])
     if request.method == "POST":
         user_id = users.get_user_id()
-        if not user_id: # TODO: course participant check
+        if not user_id:
             return render_template("error.html", message="Et ole kirjautunut.")
         users.check_csrf()
         guesses = request.form.getlist("guesses")
